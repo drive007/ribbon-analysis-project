@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis: KURZ K2000 Ribbon Consolidation</title>
+    <style>
+        /* --- Same CSS as previous Analysis examples --- */
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --heading-color: #0056b3; /* Blue */
+            --border-color: #e0e0e0;
+            --shadow-color: rgba(0, 0, 0, 0.05);
+            --accent-blue: #007bff;
+            --accent-green: #28a745;
+            --accent-red: #dc3545;
+            --accent-orange: #fd7e14; /* Medium Risk */
+            --font-primary: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --table-header-bg: #e9ecef;
+            --highlight-bg: #e7f1ff;
+        }
+        body {
+            font-family: var(--font-primary);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px var(--shadow-color);
+            border: 1px solid var(--border-color);
+        }
+        h1, h2, h3 {
+            color: var(--heading-color);
+            margin-top: 0;
+            padding-bottom: 8px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+            border-bottom: 2px solid var(--heading-color);
+        }
+        h2 {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        h3 {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            color: #444;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+        }
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 10px 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: var(--table-header-bg);
+            font-weight: 600;
+        }
+        td:last-child, th:last-child {
+            text-align: right;
+        }
+        tfoot td {
+            font-weight: bold;
+            background-color: var(--table-header-bg);
+        }
+        tfoot td[colspan="5"] { /* Adjust colspan if needed */
+             text-align: right;
+             padding-right: 12px;
+        }
+        .cost-block {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--highlight-bg);
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid var(--accent-blue);
+        }
+        .cost-block span {
+            font-size: 1.1em;
+        }
+        .cost-block strong {
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+        .cost-current { color: var(--accent-red); }
+        .cost-proposed { color: var(--heading-color); }
+        .cost-savings { color: var(--accent-green); }
+
+        ul {
+            list-style: disc;
+            padding-left: 25px;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        strong { font-weight: 600; }
+
+        .analysis-section {
+            margin-bottom: 25px;
+        }
+        .back-button {
+             display: inline-block;
+             margin-top: 20px;
+             padding: 10px 20px;
+             background-color: var(--heading-color);
+             color: white !important;
+             text-decoration: none;
+             border-radius: 5px;
+             transition: background-color 0.3s ease;
+         }
+        .back-button:hover {
+             background-color: #004085;
+         }
+        .risk-low { color: var(--accent-green); font-weight: bold;}
+        .risk-medium { color: var(--accent-orange); font-weight: bold;}
+         .risk-critical { color: var(--accent-red); font-weight: bold;} /* Added critical for consistency */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Detailed Analysis: Consolidating with KURZ K2000</h1>
+
+        <div class="analysis-section">
+            <h2>Candidate Ribbon: KURZ K2000 (Wax/Resin Standard)</h2>
+            <p>This analysis evaluates replacing all current ribbon SKUs (8-394, 8-393, 8-392) with the KURZ K2000 ribbon, specifically using the <strong>117mm x 300m FI variant</strong> for calculation.</p>
+            <ul>
+                <li><strong>Type:</strong> Wax/Resin (Standard)</li>
+                <li><strong>Assumed Price/Roll (117mm):</strong> 245 THB</li>
+                <li><strong>Total Annual Volume (All SKUs):</strong> 1,560 Rolls</li>
+            </ul>
+        </div>
+
+        <div class="analysis-section">
+            <h2>Cost Comparison</h2>
+            <h3>Current Annual Spend (All 3 SKUs)</h3>
+            <table>
+                 <thead>
+                     <tr><th>Internal Code</th><th>Description</th><th>Type</th><th>Annual Rolls</th><th>Cost/Roll</th><th>Est. Annual Cost</th></tr>
+                 </thead>
+                 <tbody>
+                     <tr><td>8-394</td><td>SATO T102E</td><td>Wax/Resin</td><td>800</td><td>675 THB</td><td>~540,000 THB</td></tr>
+                     <tr><td>8-393</td><td>BEA YI B220N</td><td>Wax</td><td>550</td><td>305 THB</td><td>~167,750 THB</td></tr>
+                     <tr><td>8-392</td><td>SATO T102E</td><td>Wax/Resin</td><td>210</td><td>575 THB</td><td>~120,750 THB</td></tr>
+                 </tbody>
+                 <tfoot>
+                     <tr><td colspan="5"><strong>Total Current Estimated Annual Cost:</strong></td><td><strong>~828,500 THB</strong></td></tr>
+                 </tfoot>
+             </table>
+
+            <h3>Projected Annual Spend (Using K2000 117mm for all 1,560 rolls)</h3>
+             <div class="cost-block">
+                 <span>Total Rolls:</span>
+                 <strong>1,560 Rolls</strong>
+             </div>
+              <div class="cost-block">
+                 <span>Price per Roll (K2000 117mm):</span>
+                 <strong>245 THB</strong>
+             </div>
+             <div class="cost-block">
+                 <span>Projected Annual Cost (K2000):</span>
+                 <strong class="cost-proposed">~382,200 THB</strong>
+             </div>
+
+            <h3>Estimated Annual Savings</h3>
+             <div class="cost-block">
+                 <span>Current Annual Cost:</span>
+                 <strong class="cost-current">~828,500 THB</strong>
+             </div>
+              <div class="cost-block">
+                 <span>Projected K2000 Annual Cost:</span>
+                 <strong class="cost-proposed">~382,200 THB</strong>
+             </div>
+              <div class="cost-block">
+                 <span>Estimated Annual Savings:</span>
+                 <strong class="cost-savings">~446,300 THB (~53.9%)</strong>
+             </div>
+        </div>
+
+         <div class="analysis-section">
+            <h2>Key Benefits</h2>
+            <ul>
+                <li><strong>Significant Cost Reduction:</strong> Saves approximately <strong>446,300 THB</strong> annually (~53.9%).</li>
+                <li><strong>Streamlined Procurement:</strong> Simplifies ordering processes.</li>
+                <li><strong>Technical Suitability (Type):</strong> As a Wax/Resin ribbon, K2000 is a better technical type match for the current Wax/Resin applications (8-394, 8-392) compared to Wax alternatives, reducing inherent durability risk.</li>
+            </ul>
+         </div>
+
+         <div class="analysis-section">
+            <h2>Risks & Validation Needed</h2>
+             <ul>
+                <li><strong>Performance Validation:</strong>
+                    <ul>
+                        <li>Must confirm K2000's print quality and durability are equivalent or superior to the current SATO T102E (Wax/Resin) on relevant materials (JP PACK, Gowns, SPT, OEM). Risk is considered <span class="risk-low">Low</span> due to matching type, but testing is crucial.</li>
+                         <li>Must confirm K2000's performance is acceptable (potentially better) than the current BEA YI B220N (Wax) on its materials (Wraps, Masks).</li>
+                    </ul>
+                </li>
+                <li><strong>Dimension Mismatch:</strong> (<span class="risk-medium">Medium Risk</span>)
+                    <ul>
+                         <li>Consider optimizing size for suitability and potentially reducing price for 110mm applications (8-393). Requires validation.</li>
+                         <li>Consider optimizing size for suitability and potentially reducing price for 85mm applications (8-392). Requires validation.</li>
+                    </ul>
+                 </li>
+                 <li><strong>Settings Adjustment:</strong> K2000 may have different optimal heat/speed settings compared to current ribbons. Printers will need recalibration and testing.</li>
+                 <li><strong>Supplier Reliability:</strong> Ensure consistent supply and quality control from KURZ.</li>
+            </ul>
+         </div>
+
+         <div class="analysis-section">
+            <h2>Conclusion & Recommendation</h2>
+             <p>Consolidating to <strong>KURZ K2000 (117mm Wax/Resin)</strong> presents a compelling opportunity, offering substantial cost savings (~54%) while mitigating the critical durability risk associated with using Wax ribbons for Wax/Resin applications. The primary challenge is validating the performance across all materials and optimizing size/managing waste for narrower applications.</p>
+             <p><strong>Recommendation:</strong> Prioritize rigorous testing of K2000 (117mm) across all current applications. Focus on durability tests for labels currently using SATO T102E and print quality tests for all. Investigate optimized sizing options with KURZ for 110mm and 85mm needs. If testing is successful, K2000 offers the best balance of cost savings and technical suitability.</p>
+         </div>
+
+        <!-- Add a link back to the main dashboard -->
+        <a href="Ribbon Consolidation Options Dashboard.html" class="back-button">Back to Dashboard</a>
+
+    </div>
+</body>
+</html>

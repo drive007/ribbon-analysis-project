@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard: Ribbon Consolidation Analysis & Action Plan (Scenario)</title>
+    <style>
+        /* --- CSS from Analysis_K2000.html --- */
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --heading-color: #0056b3; /* Blue */
+            --border-color: #e0e0e0;
+            --shadow-color: rgba(0, 0, 0, 0.05);
+            --accent-blue: #007bff;
+            --accent-green: #28a745;
+            --accent-red: #dc3545;
+            --accent-orange: #fd7e14; /* Medium Risk */
+            --font-primary: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --table-header-bg: #e9ecef;
+            --highlight-bg: #e7f1ff;
+        }
+        body {
+            font-family: var(--font-primary);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 900px; /* Matched with Analysis_K2000.html */
+            margin: 30px auto;
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px var(--shadow-color);
+            border: 1px solid var(--border-color);
+        }
+        h1, h2, h3 {
+            color: var(--heading-color);
+            margin-top: 0;
+            padding-bottom: 8px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+            border-bottom: 2px solid var(--heading-color);
+        }
+        h2 {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        h3 {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            color: #444;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+        }
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 10px 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: var(--table-header-bg);
+            font-weight: 600;
+        }
+        /* Align right for numeric/cost columns consistently */
+        table td:nth-child(3), table th:nth-child(3),
+        table td:nth-child(4), table th:nth-child(4),
+        table td:nth-child(5), table th:nth-child(5),
+        table tfoot td:nth-child(2), /* For total rolls column in tfoot */
+        table tfoot td:nth-child(4)  /* For total cost column in tfoot */
+        {
+             text-align: right;
+        }
+        table .item-no-col {
+            text-align: left;
+        }
+
+        tfoot td {
+            font-weight: bold;
+            background-color: var(--table-header-bg);
+        }
+        tfoot td.total-label { /* Specifically for the label "Total..." */
+            text-align: left;
+        }
+
+
+        .cost-block {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--highlight-bg);
+            padding: 12px 15px; /* Adjusted padding to be consistent */
+            border-radius: 5px;
+            margin-bottom: 10px; /* Consistent margin */
+            border: 1px solid var(--accent-blue);
+            font-size: 1em;
+        }
+        .cost-block span { /* No specific font-size needed here */ }
+        .cost-block strong, .cost-block .value { /* .value added for clarity */
+            font-size: 1.1em; /* Consistent font-size for value part */
+            font-weight: 600;
+        }
+        .cost-current { color: var(--accent-red); }
+        .cost-proposed { color: var(--heading-color); }
+        .cost-savings { color: var(--accent-green); }
+
+        .total-savings-display { /* Prominent display for savings */
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #e6ffed;
+            border: 1px solid var(--accent-green);
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--accent-green);
+        }
+
+        ul { /* General ul styling from Analysis_K2000.html */
+            list-style: disc;
+            padding-left: 25px;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        strong { font-weight: 600; }
+
+        .analysis-section {
+            margin-bottom: 25px; /* Consistent margin */
+        }
+        
+        .problems-list { /* Re-integrating this specific list style */
+            list-style: none;
+            padding: 0;
+            margin-bottom: 15px;
+        }
+        .problems-list li {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        .problems-list strong {
+            color: #856404;
+        }
+        .problems-list .current-cost {
+            font-weight: bold;
+            color: var(--accent-red);
+        }
+        
+        /* Considerations List styling (from previous merge, looks good) */
+        .considerations-list { list-style: none; padding: 0; }
+        .considerations-list li { margin-bottom: 8px; padding-left: 20px; position: relative; }
+        .considerations-list li::before { position: absolute; left: 0; font-weight: bold; }
+        .considerations-list li.benefit::before { content: "✓"; color: var(--accent-green); }
+        .considerations-list li.risk::before { content: "⚠️"; color: var(--accent-orange); }
+        .considerations-list li.opportunity::before { content: "💡"; color: var(--accent-blue); }
+        .risk-low { color: var(--accent-green); font-weight: bold;}
+        .risk-medium { color: var(--accent-orange); font-weight: bold;}
+        .risk-critical { color: var(--accent-red); font-weight: bold;}
+
+        .back-button {
+             display: inline-block;
+             margin-top: 20px;
+             padding: 10px 20px;
+             background-color: var(--heading-color);
+             color: white !important; /* Important to override potential link color */
+             text-decoration: none;
+             border-radius: 5px;
+             transition: background-color 0.3s ease;
+         }
+        .back-button:hover {
+             background-color: #004085; /* Darker blue on hover */
+         }
+
+        .footer-notes {
+            text-align: center;
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px dashed var(--border-color);
+        }
+        .footer-notes strong { color: var(--text-color); }
+
+        /* Responsive Adjustments from Analysis_K2000.html (or similar intent) */
+        @media (max-width: 768px) {
+            h1 { font-size: 1.6em; }
+            h2 { font-size: 1.3em; }
+            .cost-block { flex-direction: column; align-items: flex-start; }
+            .cost-block span, .cost-block strong, .cost-block .value { font-size: 1em; margin-bottom: 5px; }
+        }
+         @media (max-width: 576px) {
+            .container { padding: 20px; }
+         }
+    </style>
+</head>
+<body>
+    <div class="container">
+         <h1>Ribbon Consolidation Analysis & Action Plan</h1>
+         <p style="text-align:center; margin-top:-20px; margin-bottom:25px; font-size:1.1em; color: #555;">Scenario: K2000 (Wax/Resin) + K102N (Wax)</p>
+
+        <!-- Current Situation Section -->
+        <div class="analysis-section">
+            <h2>Current Situation Recap (2024 Data)</h2>
+            <ul class="problems-list">
+                <li><strong>High Cost:</strong> Total Annual Spend: <strong class="current-cost">~828,500 THB</strong>.</li>
+                <li><strong>Complexity:</strong> Managing 3 SKUs (Wax/Resin & Wax).</li>
+                <li><strong>Potential Waste:</strong> Using wider ribbons than needed.</li>
+            </ul>
+            <h3>Current Ribbon Spend</h3>
+            <table> <!-- Removed specific class, relies on global table style -->
+               <thead><tr><th class="item-no-col">Item No.</th><th>Type</th><th>Rolls/Year</th><th>Cost/Roll (THB)</th><th>Est. Annual Cost (THB)</th></tr></thead>
+               <tbody>
+                   <tr><td class="item-no-col">8-394</td><td>Wax/Resin</td><td>800</td><td>675</td><td>~540,000</td></tr>
+                   <tr><td class="item-no-col">8-393</td><td>Wax</td><td>550</td><td>305</td><td>~167,750</td></tr>
+                   <tr><td class="item-no-col">8-392</td><td>Wax/Resin</td><td>210</td><td>575</td><td>~120,750</td></tr>
+               </tbody>
+               <tfoot>
+                   <tr>
+                       <td colspan="2" class="total-label"><strong>Total</strong></td>
+                       <td><strong>1,560</strong></td>
+                       <td></td> <!-- Empty cell for Cost/Roll column -->
+                       <td><strong>~828,500</strong></td>
+                   </tr>
+               </tfoot>
+            </table>
+        </div>
+
+        <!-- Proposed Scenario Analysis Section -->
+        <div class="analysis-section">
+            <h2>Proposed Consolidation Scenario Analysis</h2>
+            
+            <h3>Replacements & Volumes</h3>
+            <ul> <!-- Changed from .styled-list to general ul -->
+                <li>Use <strong>KURZ K2000 (117mm*)</strong> @ 245 THB
+                    <ul style="padding-left: 20px; margin-top: 5px;">
+                        <li>Replaces 8-394 (W/R 117mm): 800 rolls</li>
+                        <li>Replaces 8-392 (W/R 85mm): 210 rolls</li>
+                        <li><strong>Total K2000 Rolls: 1,010</strong></li>
+                        <li>(*117mm assumed, validation needed for 85mm use)</li>
+                    </ul>
+                </li>
+                 <li>Use <strong>KURZ K102N (110mm*)</strong> @ 175 THB
+                    <ul style="padding-left: 20px; margin-top: 5px;">
+                        <li>Replaces 8-393 (Wax 110mm): 550 rolls</li>
+                        <li><strong>Total K102N Rolls: 550</strong></li>
+                         <li>(*110mm price assumed available)</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>Projected Cost Calculation</h3>
+            <div class="cost-block">
+                <span class="label">K2000 Cost (1010 rolls * 245 THB):</span>
+                <span class="value cost-proposed">~247,450 THB</span>
+            </div>
+            <div class="cost-block">
+                <span class="label">K102N Cost (550 rolls * 175 THB):</span>
+                 <span class="value cost-proposed">~96,250 THB</span>
+            </div>
+            <div class="cost-block" style="margin-top:15px; border-top: 2px solid var(--heading-color); padding-top:15px;">
+                <span class="label"><strong>Projected Total Annual Cost:</strong></span>
+                <strong class="value cost-proposed">~343,700 THB</strong>
+            </div>
+             <div class="cost-block">
+                 <span class="label">Current Total Annual Cost:</span>
+                 <strong class="value cost-current">~828,500 THB</strong>
+             </div>
+             <div class="total-savings-display">
+                 Estimated Annual Savings: ~484,800 THB (~58.5%)
+             </div>
+
+            <h3 style="margin-top: 25px;">Key Considerations for this Scenario</h3>
+             <ul class="considerations-list">
+                <li class="benefit">Reduces SKUs from 3 to 2.</li>
+                <li class="benefit">Maintains correct ribbon type (Wax/Resin & Wax) for primary applications, minimizing durability risk.</li>
+                <li class="benefit">Offers very significant savings (~58.5%).</li>
+                <li class="risk">Requires K2000 validation vs. SATO T102E.</li>
+                <li class="risk">Requires K102N validation vs. BEA YI B220N.</li>
+                <li class="risk">Requires validation/optimization for using 117mm K2000 on 85mm lines (waste/guides). <span class="risk-medium">(Medium Risk)</span></li>
+                <li class="risk">Requires confirmation of K102N 110mm price/availability.</li>
+                <li class="opportunity">Opportunity: Request K2000 in 85mm width from KURZ.</li>
+             </ul>
+        </div>
+
+
+        <!-- Action Plan Section (Static) -->
+        <div class="analysis-section">
+            <h2>Action Plan Overview (For K2000 + K102N Scenario)</h2>
+            <ul>
+                <li>Confirm K102N 110mm Price & Availability with supplier.</li>
+                <li>Procure test samples: KURZ K2000 (117mm) and KURZ K102N (110mm, once price/availability confirmed).</li>
+                <li>Define a detailed test protocol for both K2000 (vs. Wax/Resin) and K102N (vs. Wax).</li>
+                <li>Execute comprehensive performance testing:
+                    <ul>
+                        <li>K2000 against current Wax/Resin ribbons (8-394, 8-392) on all relevant materials (JP PACK, Gowns, SPT, OEM), focusing on durability.</li>
+                        <li>K102N against current Wax ribbon (8-393) on relevant materials (Wraps, Masks).</li>
+                    </ul>
+                </li>
+                <li>Assess the impact (waste, guide adjustments) of using 117mm K2000 on production lines currently using 85mm ribbons.</li>
+                <li>(Optional, based on waste assessment) Request a quotation for K2000 in 85mm width from KURZ.</li>
+                <li>Compile all test results, cost analysis (including potential waste from size mismatch), and overall scenario feasibility.</li>
+                <li>Hold a final decision meeting with management to determine Go/No-Go for this consolidation scenario.</li>
+                <li>If approved, develop and execute a detailed implementation plan, including printer recalibrations, stock transition, and staff training.</li>
+            </ul>
+        </div>
+
+        <!-- Notes Footer -->
+        <div class="footer-notes">
+             <p>Analysis based on 2024 usage data and provided quotations/datasheets (Apr 2025 Prices).
+             <br>Scenario assumes K102N 110mm price availability and uses K2000 117mm for W/R replacements. Dimension mismatch requires validation.
+             <br><strong>Thorough testing confirming print quality, durability, and operational impact is essential before implementation.</strong></p>
+        </div>
+
+        <!-- Back Button -->
+        <a href="Ribbon Consolidation Options Dashboard.html" class="back-button">Back to Dashboard</a>
+
+    </div> <!-- End Container -->
+
+</body>
+</html>
