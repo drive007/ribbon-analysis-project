@@ -1,3 +1,5 @@
+--- START OF FILE index.html ---
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,6 +28,8 @@
             --bar-color-8393: #001f5a;
             --bar-color-8392: #e67e22;
             --table-header-bg: #e9ecef;
+            --status-completed-bg: #d4edda; /* Light Green for Completed */
+            --status-in-progress-bg: #fff3cd; /* Light Yellow for In Progress */
         }
         body { font-family: var(--font-primary); background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 15px; line-height: 1.5; }
         .dashboard-container { max-width: 1300px; margin: auto; background-color: var(--card-bg); padding: 25px; border-radius: 10px; box-shadow: 0 3px 10px var(--shadow-color); border: 1px solid var(--border-color); }
@@ -126,6 +130,10 @@
              box-sizing: border-box;
              margin-bottom: 4px;
          }
+         /* Status specific colors */
+        .status-select.status-completed { background-color: var(--status-completed-bg); color: #155724;}
+        .status-select.status-in-progress { background-color: var(--status-in-progress-bg); color: #856404;}
+
          .task-cell-content { display: flex; flex-direction: column; }
          .task-input { margin-bottom: 8px !important; }
          .sub-details {
@@ -154,7 +162,7 @@
             width: 100%;
             font-size: 0.95em !important;
          }
-         .notes-block textarea { height: 45px; }
+         .notes-block textarea { height: auto; min-height: 45px; }
 
 
          .todo-table td:nth-child(1) { width: 45%; }
@@ -166,8 +174,15 @@
          .move-up-btn { color: var(--accent-blue); }
          .move-down-btn { color: var(--accent-blue); }
          .delete-row-btn { color: var(--accent-red); }
-         .confirmed input, .confirmed select, .confirmed textarea { background-color: #e9ecef; cursor: not-allowed; opacity: 0.7; }
+         .confirmed input, .confirmed select, .confirmed textarea, .confirmed .details-button { background-color: #e9ecef !important; cursor: not-allowed !important; opacity: 0.7 !important; pointer-events: none; }
          .confirmed .action-btn { display: none; }
+         .confirmed .details-button { color: #6c757d !important; border: 1px solid #ced4da !important;}
+         .confirmed .status-select { /* Ensure confirmed status boxes are greyed out */
+            background-color: #e9ecef !important;
+            color: #495057 !important; /* Default text color for disabled inputs */
+            opacity: 0.7 !important;
+         }
+
 
         /* --- Notes Footer --- */
         .notes { text-align: center; font-size: 0.85em; color: #777; margin-top: 30px; padding-top: 15px; border-top: 1px dashed var(--border-color); }
@@ -378,7 +393,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
     <script>
-        const LOCAL_STORAGE_KEY = 'ribbonConsolidationPlanV7'; // Updated key
+        const LOCAL_STORAGE_KEY = 'ribbonConsolidationPlanV10'; // Updated key for status colors
         const todoTableBody = document.getElementById('todoTableBody');
         const departments = ["Procurement", "QA", "Production", "Engineering", "IT", "Maintenance", "Management", "Finance", "Other"];
         const statusOptions = {
@@ -387,41 +402,46 @@
             "planning": "Planning", "na": "N/A"
         };
 
-         let currentTasks = [ 
-             { task: "1. Select a Primary Consolidation Option/Scenario for Detailed Action Planning", department: "Management", name: "Project Lead", email: "", notes: "Review options, then tailor this plan.", status: "not-started", dueDate: "" },
-             { task: "2. Procure Test Samples for Chosen Option(s)", department: "Procurement", name: "", email: "", notes: "", status: "not-started", dueDate: "" },
-             { task: "3. Define Detailed Test Protocol", department: "QA", name: "", email: "", notes: "", status: "not-started", dueDate: "" },
-             { task: "4. Execute Performance Testing", department: "QA", name: "", email: "", notes: "", status: "not-started", dueDate: "" },
-             { task: "5. Assess Dimension Impact & Waste (if applicable)", department: "Engineering", name: "", email: "", notes: "", status: "not-started", dueDate: "" },
-             { task: "6. Compile Results & Final Analysis", department: "Other", name: "", email: "", notes: "", status: "not-started", dueDate: "" },
-             { task: "7. Final Decision Meeting", department: "Management", name: "", email: "", notes: "", status: "not-started", dueDate: "" },
-             { task: "8. Develop & Execute Implementation Plan", department: "Production", name: "", email: "", notes: "If approved.", status: "not-started", dueDate: "" }
-         ];
-        const scenarioTasksK2000K102N = [
-            { task: "SCENARIO: 1. Confirm K102N 110mm Price & Availability", department: "Procurement", name: "Purchaser A", email: "purchaser.a@example.com", notes: "Verify 175 THB price for 110mm.", status: "not-started", dueDate: "2025-05-10" },
-            { task: "SCENARIO: 2. Procure Test Samples (K2000-117mm & K102N-110mm*)", department: "Procurement", name: "Purchaser A", email: "purchaser.a@example.com", notes: "*Confirm K102N 110mm price/avail. Need ~5 rolls K2000, ~3 K102N", status: "not-started", dueDate: "2025-05-20" },
-            { task: "SCENARIO: 3. Define Detailed Test Protocol (for K2000 & K102N)", department: "QA", name: "QA Lead", email: "qalead@example.com", notes: "Focus K2000 on W/R, K102N on Wax", status: "not-started", dueDate: "2025-05-25" },
-            { task: "SCENARIO: 4. Execute Performance Testing", department: "QA", name: "QA Tech", email: "qatech@example.com", notes: "", status: "not-started", dueDate: "2025-06-25" },
-            { task: "   4.1 K2000 vs 8-394/8-392 (JP PACK, Gowns, SPT, OEM)", department: "QA", name: "QA Tech", email: "qatech@example.com", notes: "Critical durability focus", status: "na", dueDate: "" },
-            { task: "   4.2 K102N vs 8-393 (Wraps, Masks)", department: "QA", name: "QA Tech", email: "qatech@example.com", notes: "Compare vs BEA YI", status: "na", dueDate: "" },
-            { task: "SCENARIO: 5. Assess K2000 117mm on 85mm lines (Waste/Guides)", department: "Engineering", name: "Prod. Eng.", email: "prod.eng@example.com", notes: "Quantify waste", status: "not-started", dueDate: "2025-06-30" },
-            { task: "SCENARIO: 6. (Optional) Request Quote K2000 85mm from KURZ", department: "Procurement", name: "Purchaser A", email: "purchaser.a@example.com", notes: "Based on waste assessment", status: "on-hold", dueDate: "2025-07-05" },
-            { task: "SCENARIO: 7. Compile Test Results & Scenario Analysis", department: "Other", name: "Project Lead", email: "project.lead@example.com", notes: "Include waste cost if applicable", status: "not-started", dueDate: "2025-07-20" },
-            { task: "SCENARIO: 8. Final Decision Meeting (Scenario Go/No-Go)", department: "Management", name: "Mgmt Team", email: "", notes: "", status: "not-started", dueDate: "2025-08-05" },
-            { task: "SCENARIO: 9. Develop & Execute Implementation Plan (If Approved)", department: "Production", name: "All", email: "", notes: "Focus on 2 SKUs", status: "not-started", dueDate: "" }
+        let currentTasks = [
+            {
+                task: "1. Conduct Ribbon Quality Test as per Standard (Quality Test)",
+                department: "Other",
+                name: "Drive",
+                email: "Udi@emerald-nw.com",
+                notes: "—", 
+                status: "completed",
+                dueDate: "2024-05-12",
+                qualityTestResultLinkHtml: "<a href='quality_test_results.html' target='_blank' class='details-button' style='display:inline-block; margin-bottom:5px; background-color: var(--accent-green); color:white;'>Test Results / ผลการทดสอบคุณภาพ</a>",
+                qualityTestProcedureLinkHtml: "<a href='test_procedure.html' target='_blank' class='details-button' style='display:inline-block; background-color: var(--accent-blue); color:white;'>Test Procedure / ขั้นตอนมาตรฐานการทดสอบ</a>"
+            },
+            {
+                task: "2. Process Request for Approved Material Evaluation Control (ENI-R&D-07)",
+                department: "Other",
+                name: "Drive",
+                email: "Udi@emerald-nw.com",
+                notes: "Attach documents Ref. ENI-R&D-07 No. 009/25, 010/25, 011/25\n012/25, 013/25",
+                status: "in-progress",
+                dueDate: "2025-05-13"
+            },
+            {
+                task: "3. Supplier Product Presentation and Company Profile (16/05/2025 11:00–12:00)",
+                department: "Other",
+                name: "Drive",
+                email: "Udi@emerald-nw.com",
+                notes: "Attendee List:\n\nK’ Sophia\nPosition: MD\nEmail: swong@emerald-nw.com\n\nP’ Shell\nPosition: Management\nEmail: parinya_s@emerald-nw.com\n\nP' Koy\nPosition: Production Manager\nEmail: pakornpong-kam@emerald-nw.com\n\nP’ Tammy\nPosition: Purchasing Manager\nEmail: tammy@emerald-nw.com\n\nP’ Jo\nPosition: R&D\nEmail: rd@emerald-nw.com",
+                status: "in-progress",
+                dueDate: "2025-05-16"
+            }
         ];
-        const scenarioTasksK2000Single = [
-             { task: "K2000-SINGLE: 1. Procure Test Samples (KURZ K2000 - 117mm)", department: "Procurement", name: "Purchaser A", email: "purchaser.a@example.com", notes: "Need 5-10 rolls for comprehensive QA tests against all 3 current SKUs.", status: "not-started", dueDate: "2025-05-15" },
-             { task: "K2000-SINGLE: 2. Define Detailed Test Protocol", department: "QA", name: "QA Lead", email: "qalead@example.com", notes: "K2000 to be tested against 8-394, 8-393, 8-392 requirements.", status: "not-started", dueDate: "2025-05-20" },
-             { task: "   2.1 Specify Substrates (All current labels)", department: "QA", name: "QA Lead", email: "qalead@example.com", notes: "JP PACK, Gowns, SPT, OEM, Wraps, Masks.", status: "na", dueDate: "" },
-             { task: "   2.2 Define Durability Tests", department: "QA", name: "QA Lead", email: "qalead@example.com", notes: "Critical for W/R replacement (JP PACK, Gowns, etc.). Assess if acceptable for current Wax uses (Wraps, Masks).", status: "na", dueDate: "" },
-             { task: "K2000-SINGLE: 3. Execute K2000 Performance Testing", department: "QA", name: "QA Tech", email: "qatech@example.com", notes: "Compare against all 3 current ribbons.", status: "not-started", dueDate: "2025-06-15" },
-             { task: "K2000-SINGLE: 4. Assess Dimension Impact & Waste", department: "Engineering", name: "Prod. Eng.", email: "prod.eng@example.com", notes: "Using 117mm for 110mm & 85mm applications. Quantify waste.", status: "not-started", dueDate: "2025-06-20" },
-             { task: "K2000-SINGLE: 5. Evaluate Optimized Sizing Options with KURZ", department: "Procurement", name: "Purchaser A", email: "purchaser.a@example.com", notes: "Ask for 110mm, 85mm K2000 pricing if waste is significant.", status: "not-started", dueDate: "2025-06-30" },
-             { task: "K2000-SINGLE: 6. Compile Results & Final Analysis", department: "Other", name: "Project Lead", email: "project.lead@example.com", notes: "Include cost of waste or cost of optimized sizes.", status: "not-started", dueDate: "2025-07-15" },
-             { task: "K2000-SINGLE: 7. Final Decision Meeting", department: "Management", name: "Mgmt Team", email: "", notes: "", status: "not-started", dueDate: "2025-07-30" },
-             { task: "K2000-SINGLE: 8. Develop & Execute Implementation Plan", department: "Production", name: "All", email: "", notes: "If approved.", status: "not-started", dueDate: "" }
-        ];
+        
+        function applyStatusColor(selectElement) {
+            selectElement.classList.remove('status-completed', 'status-in-progress'); // Remove old status classes
+            if (selectElement.value === 'completed') {
+                selectElement.classList.add('status-completed');
+            } else if (selectElement.value === 'in-progress') {
+                selectElement.classList.add('status-in-progress');
+            }
+        }
 
         function createRowHtml(taskData, isConfirmed = false) {
             const row = todoTableBody.insertRow();
@@ -429,25 +449,49 @@
 
             const taskDetailCell = row.insertCell();
             taskDetailCell.style.verticalAlign = 'top';
-            taskDetailCell.innerHTML = `
-                <div class="task-cell-content">
-                    <input type="text" class="task-input" value="${taskData.task || ''}" placeholder="Task Description" ${isConfirmed ? 'disabled' : ''}>
-                    <div class="sub-details">
-                        <div class="responsible-block">
-                            <label>Responsible</label>
-                            <select class="dept-select" ${isConfirmed ? 'disabled' : ''}>
-                                ${departments.map(dept => `<option value="${dept}" ${taskData.department === dept ? 'selected' : ''}>${dept}</option>`).join('')}
-                            </select>
-                            <input type="text" class="resp-name-input" value="${taskData.name || ''}" placeholder="Name" ${isConfirmed ? 'disabled' : ''}>
-                            <input type="email" class="resp-email-input" value="${taskData.email || ''}" placeholder="Email" ${isConfirmed ? 'disabled' : ''}>
-                        </div>
-                        <div class="notes-block">
-                            <label>Notes / Files</label>
-                            <textarea class="notes-input" placeholder="Add notes or file links..." ${isConfirmed ? 'disabled' : ''}>${taskData.notes || ''}</textarea>
-                        </div>
-                    </div>
+
+            const taskCellContentDiv = document.createElement('div');
+            taskCellContentDiv.className = 'task-cell-content';
+
+            const taskInput = document.createElement('input');
+            taskInput.type = 'text';
+            taskInput.className = 'task-input';
+            taskInput.value = taskData.task || '';
+            taskInput.placeholder = 'Task Description';
+            taskInput.disabled = isConfirmed;
+            taskCellContentDiv.appendChild(taskInput);
+
+            if (taskData.qualityTestResultLinkHtml) {
+                const qualityTestResultDiv = document.createElement('div');
+                qualityTestResultDiv.style.marginTop = '8px';
+                qualityTestResultDiv.innerHTML = taskData.qualityTestResultLinkHtml;
+                taskCellContentDiv.appendChild(qualityTestResultDiv);
+            }
+            if (taskData.qualityTestProcedureLinkHtml) {
+                const qualityTestProcedureDiv = document.createElement('div');
+                qualityTestProcedureDiv.style.marginTop = '5px';
+                qualityTestProcedureDiv.innerHTML = taskData.qualityTestProcedureLinkHtml;
+                taskCellContentDiv.appendChild(qualityTestProcedureDiv);
+            }
+            
+            const subDetailsDiv = document.createElement('div');
+            subDetailsDiv.className = 'sub-details';
+            subDetailsDiv.innerHTML = `
+                <div class="responsible-block">
+                    <label>Responsible</label>
+                    <select class="dept-select" ${isConfirmed ? 'disabled' : ''}>
+                        ${departments.map(dept => `<option value="${dept}" ${taskData.department === dept ? 'selected' : ''}>${dept}</option>`).join('')}
+                    </select>
+                    <input type="text" class="resp-name-input" value="${taskData.name || ''}" placeholder="Name" ${isConfirmed ? 'disabled' : ''}>
+                    <input type="email" class="resp-email-input" value="${taskData.email || ''}" placeholder="Email" ${isConfirmed ? 'disabled' : ''}>
+                </div>
+                <div class="notes-block">
+                    <label>Notes / Files</label>
+                    <textarea class="notes-input" placeholder="Add notes or file links..." ${isConfirmed ? 'disabled' : ''}>${taskData.notes || ''}</textarea>
                 </div>
             `;
+            taskCellContentDiv.appendChild(subDetailsDiv);
+            taskDetailCell.appendChild(taskCellContentDiv);
 
             const statusCell = row.insertCell();
             const statusSelect = document.createElement('select');
@@ -459,7 +503,10 @@
                 if (taskData.status === value) option.selected = true;
                 statusSelect.appendChild(option);
             });
+            applyStatusColor(statusSelect); // Apply initial color
+            statusSelect.addEventListener('change', function() { applyStatusColor(this); }); // Add listener for changes
             statusCell.appendChild(statusSelect);
+
 
             const dateCell = row.insertCell();
             const dateInput = document.createElement('input');
@@ -475,7 +522,7 @@
                     <button class="action-btn move-down-btn" onclick="moveRow(this, 1)" title="Move Down">⬇️</button>
                     <button class="action-btn delete-row-btn" onclick="deleteRow(this)" title="Delete Task">🗑️</button>
                 `;
-            } else { // If confirmed, ensure no action buttons are displayed
+            } else { 
                 actionCell.innerHTML = '';
             }
             return row;
@@ -488,6 +535,19 @@
                 const taskCell = rows[i].cells[0];
                 const statusCell = rows[i].cells[1];
                 const dateCell = rows[i].cells[2];
+                
+                let originalTask = currentTasks.find(t => t.task === taskCell.querySelector('.task-input').value) || {};
+                if (localStorage.getItem(LOCAL_STORAGE_KEY)) {
+                    try { // Add try-catch for parsing local storage
+                        const savedTasks = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
+                        if (Array.isArray(savedTasks)) {
+                           originalTask = savedTasks.find(t => t.task === taskCell.querySelector('.task-input').value) || originalTask;
+                        }
+                    } catch (e) {
+                        console.error("Error parsing saved tasks in getTableData:", e);
+                    }
+                }
+
                 const rowData = {
                     task: taskCell.querySelector('.task-input').value,
                     department: taskCell.querySelector('.dept-select').value,
@@ -495,7 +555,9 @@
                     email: taskCell.querySelector('.resp-email-input').value,
                     notes: taskCell.querySelector('.notes-input').value,
                     status: statusCell.querySelector('.status-select').value,
-                    dueDate: dateCell.querySelector('input[type="date"]').value
+                    dueDate: dateCell.querySelector('input[type="date"]').value,
+                    qualityTestResultLinkHtml: originalTask.qualityTestResultLinkHtml,
+                    qualityTestProcedureLinkHtml: originalTask.qualityTestProcedureLinkHtml
                 };
                  if (includeConfirmedStatus) {
                      rowData.confirmed = rows[i].classList.contains('confirmed');
@@ -516,7 +578,9 @@
                     notes: task.notes || "",
                     status: task.status || "not-started",
                     dueDate: task.dueDate || "",
-                    confirmed: task.confirmed || false 
+                    confirmed: task.confirmed || false,
+                    qualityTestResultLinkHtml: task.qualityTestResultLinkHtml, 
+                    qualityTestProcedureLinkHtml: task.qualityTestProcedureLinkHtml
                 };
                 createRowHtml(fullTaskData, isPlanConfirmedOverall || fullTaskData.confirmed);
             });
@@ -538,10 +602,12 @@
                             notes: task.notes || "",
                             status: task.status || "not-started",
                             dueDate: task.dueDate || "",
-                            confirmed: task.confirmed || false 
+                            confirmed: task.confirmed || false,
+                            qualityTestResultLinkHtml: task.qualityTestResultLinkHtml,
+                            qualityTestProcedureLinkHtml: task.qualityTestProcedureLinkHtml
                         }));
                     } else if (Array.isArray(parsedData) && parsedData.length === 0) {
-                        // No change needed
+                         activeTasks = []; 
                     }
                 } catch (e) {
                     console.error("Error parsing saved data:", e);
@@ -552,6 +618,10 @@
             const isPlanConfirmedOverall = localStorage.getItem(LOCAL_STORAGE_KEY + '_confirmed') === 'true';
             populateTableWithTasks(activeTasks, isPlanConfirmedOverall);
             updateButtonStates(isPlanConfirmedOverall); 
+            document.querySelectorAll('.notes-input').forEach(textarea => {
+                textarea.style.height = 'auto';
+                textarea.style.height = (textarea.scrollHeight) + 'px';
+            });
         }
 
          function saveData() {
@@ -565,7 +635,12 @@
         function addTaskRow() {
              const isConfirmed = localStorage.getItem(LOCAL_STORAGE_KEY + '_confirmed') === 'true';
              if (isConfirmed) { alert("Plan is confirmed and locked. Cannot add new tasks."); return; }
-             createRowHtml({ task: "", department: departments[0], name: "", email: "", notes: "", status: "not-started", dueDate: "" });
+             const newRowEl = createRowHtml({ task: "", department: departments[0], name: "", email: "", notes: "", status: "not-started", dueDate: "" });
+             const newTextarea = newRowEl.querySelector('.notes-input');
+              if (newTextarea) {
+                newTextarea.addEventListener('input', autoGrowTextarea);
+                autoGrowTextarea.call(newTextarea); 
+            }
         }
 
         function deleteRow(button) {
@@ -593,8 +668,7 @@
             const addBtn = document.querySelector('.add-row-btn');
             const confirmBtn = document.querySelector('.confirm-btn');
             const cancelConfirmBtn = document.querySelector('.cancel-confirm-btn');
-            // Save and Export buttons are generally always enabled, adjust if needed.
-
+            
             if (addBtn) {
                 addBtn.disabled = isPlanConfirmed;
                 addBtn.style.opacity = isPlanConfirmed ? 0.6 : 1;
@@ -622,14 +696,29 @@
                  for (let i = 0; i < rows.length; i++) {
                      rows[i].classList.add('confirmed');
                      const inputs = rows[i].querySelectorAll('input, select, textarea');
-                     inputs.forEach(input => input.disabled = true);
-                     const actionCell = rows[i].cells[rows[i].cells.length - 1]; // Last cell for actions
-                     actionCell.innerHTML = ''; // Clear action buttons
+                     inputs.forEach(input => {
+                        input.disabled = true;
+                        // If it's a status select, ensure the .confirmed .status-select CSS overrides other status colors
+                        if (input.classList.contains('status-select')) {
+                            // No need to remove other status classes, CSS specificity will handle it
+                        }
+                     });
+                     
+                     const customButtons = rows[i].querySelectorAll('.details-button');
+                     customButtons.forEach(btn => {
+                         btn.style.pointerEvents = 'none'; 
+                         btn.style.opacity = '0.7';
+                         btn.style.backgroundColor = '#adb5bd'; 
+                         btn.style.borderColor = '#adb5bd';
+                     });
+
+                     const actionCell = rows[i].cells[rows[i].cells.length - 1]; 
+                     actionCell.innerHTML = ''; 
                  }
                  localStorage.setItem(LOCAL_STORAGE_KEY + '_confirmed', 'true');
                  updateButtonStates(true);
                  alert('Action plan confirmed and locked.');
-                 saveData();
+                 saveData(); 
              }
         }
 
@@ -643,8 +732,27 @@
                 for (let i = 0; i < rows.length; i++) {
                     rows[i].classList.remove('confirmed');
                     const inputs = rows[i].querySelectorAll('input, select, textarea');
-                    inputs.forEach(input => input.disabled = false);
-                    const actionCell = rows[i].cells[rows[i].cells.length - 1]; // Last cell for actions
+                    inputs.forEach(input => {
+                        input.disabled = false;
+                        if (input.classList.contains('status-select')) {
+                            applyStatusColor(input); // Re-apply dynamic color after enabling
+                        }
+                    });
+
+                    const customButtons = rows[i].querySelectorAll('.details-button');
+                    customButtons.forEach(btn => {
+                         btn.style.pointerEvents = 'auto';
+                         btn.style.opacity = '1';
+                         if (btn.textContent.includes("Test Results")) {
+                             btn.style.backgroundColor = 'var(--accent-green)';
+                         } else if (btn.textContent.includes("Test Procedure")) {
+                             btn.style.backgroundColor = 'var(--accent-blue)';
+                         } else {
+                             btn.style.backgroundColor = 'var(--heading-color)';
+                         }
+                     });
+
+                    const actionCell = rows[i].cells[rows[i].cells.length - 1]; 
                     actionCell.innerHTML = `
                         <button class="action-btn move-up-btn" onclick="moveRow(this, -1)" title="Move Up">⬆️</button>
                         <button class="action-btn move-down-btn" onclick="moveRow(this, 1)" title="Move Down">⬇️</button>
@@ -654,45 +762,89 @@
                 localStorage.setItem(LOCAL_STORAGE_KEY + '_confirmed', 'false');
                 updateButtonStates(false);
                 alert('Plan confirmation has been cancelled. Tasks are now editable.');
-                saveData();
+                saveData(); 
             }
         }
+        
+        function autoGrowTextarea() {
+            this.style.height = 'auto'; 
+            this.style.height = (this.scrollHeight) + 'px';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData();
+            document.querySelectorAll('.notes-input').forEach(textarea => {
+                textarea.addEventListener('input', autoGrowTextarea);
+                autoGrowTextarea.call(textarea); 
+            });
+        });
+
 
         function exportToExcel(event) {
             event.preventDefault();
             if (typeof XLSX === 'undefined') { alert('SheetJS library not loaded.'); return; }
-            const data = getTableData();
-            const dataForExport = data.map(row => ({
-                "Task Description": row.task,
-                "Responsible Dept": row.department,
-                "Responsible Name": row.name,
-                "Email": row.email,
-                "Notes / Files": row.notes,
-                "Status": statusOptions[row.status] || row.status,
-                "Target Due Date": row.dueDate
-            }));
+            const data = getTableData(); 
+            const dataForExport = data.map(row => {
+                let taskDescription = row.task;
+                if (row.qualityTestResultLinkHtml) { 
+                    taskDescription += `\n(Ref: Test Results)`; 
+                }
+                if (row.qualityTestProcedureLinkHtml) {
+                    taskDescription += `\n(Ref: Test Procedure)`;
+                }
+                return {
+                    "Task Description": taskDescription,
+                    "Responsible Dept": row.department,
+                    "Responsible Name": row.name,
+                    "Email": row.email,
+                    "Notes / Files": row.notes,
+                    "Status": statusOptions[row.status] || row.status,
+                    "Target Due Date": row.dueDate
+                };
+            });
+
             try {
                 const ws = XLSX.utils.json_to_sheet(dataForExport);
-                const colWidths = Object.keys(dataForExport[0] || {}).map(key => {
-                     let maxLen = key.length;
-                     dataForExport.forEach(item => {
-                         const cellValue = item[key] ? String(item[key]) : '';
-                         const lines = cellValue.split('\n'); 
-                         lines.forEach(line => { if (line.length > maxLen) { maxLen = line.length; } });
-                     });
-                      if (key === "Task Description") return { wch: Math.min(maxLen + 5, 60) };
-                      if (key === "Notes / Files") return { wch: Math.min(maxLen + 5, 50) };
-                     return { wch: Math.min(maxLen + 2, 30) };
-                 });
+                
+                const colWidths = [];
+                if (dataForExport.length > 0) {
+                    Object.keys(dataForExport[0]).forEach(key => {
+                        let maxLen = key.length; 
+                        dataForExport.forEach(item => {
+                            const cellValue = item[key] ? String(item[key]) : '';
+                            const lines = cellValue.split('\n');
+                            lines.forEach(line => {
+                                if (line.length > maxLen) {
+                                    maxLen = line.length;
+                                }
+                            });
+                        });
+                        let width;
+                        if (key === "Task Description") width = Math.min(maxLen + 5, 70);
+                        else if (key === "Notes / Files") width = Math.min(maxLen + 5, 60);
+                        else width = Math.min(maxLen + 2, 35);
+                        colWidths.push({ wch: width });
+                    });
+                }
                  ws['!cols'] = colWidths;
 
                 const wb = XLSX.utils.book_new();
                 XLSX.utils.book_append_sheet(wb, ws, "Ribbon Action Plan");
+
+                if(ws['!ref']) { 
+                    const range = XLSX.utils.decode_range(ws['!ref']);
+                    for (let R = range.s.r; R <= range.e.r; ++R) {
+                        const taskDescCellAddress = XLSX.utils.encode_cell({r: R, c: 0}); 
+                        const notesCellAddress = XLSX.utils.encode_cell({r: R, c: 4}); 
+                        if(ws[taskDescCellAddress]) ws[taskDescCellAddress].s = { alignment: { wrapText: true, vertical: 'top' } };
+                        if(ws[notesCellAddress]) ws[notesCellAddress].s = { alignment: { wrapText: true, vertical: 'top' } };
+                    }
+                }
+
                 XLSX.writeFile(wb, "Ribbon_Action_Plan.xlsx");
             } catch (e) { console.error("Error exporting:", e); alert("Error exporting to Excel."); }
         }
         
-        document.addEventListener('DOMContentLoaded', loadData);
     </script>
 
 </body>

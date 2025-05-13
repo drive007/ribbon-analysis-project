@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simplified Ribbon Test Plan / แผนการทดสอบริบบอนอย่างง่าย</title>
+    <style>
+        :root {
+            --bg-color: #f4f7f9;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --heading-color: #0056b3;
+            --border-color: #d6dde3;
+            --shadow-color: rgba(0, 0, 0, 0.07);
+            --table-header-bg: #e9ecef;
+            --sample-area-height: 40px;
+            --sample-area-width: 100px;
+            --accent-green: #28a745;
+            --accent-yellow: #ffc107;
+            --accent-red: #dc3545;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+        .container {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px var(--shadow-color);
+        }
+        h1, h2, h3, h4 {
+            color: var(--heading-color);
+        }
+        h1 {
+            border-bottom: 2px solid var(--heading-color);
+            padding-bottom: 10px;
+            text-align: center;
+        }
+        h2 {
+            margin-top: 30px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+        h3 {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        h4 {
+            font-size: 1.1em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #004085;
+        }
+        .test-section, .grading-section, .printing-parameters-section, .lab-summary-section {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .thai {
+            color: #555;
+            font-style: italic;
+            font-size: 0.9em;
+            margin-left: 5px;
+            display: block;
+        }
+        ul, ol { /* Added ol for ordered lists */
+            list-style-type: disc;
+            margin-left: 20px;
+            padding-left: 15px; /* Add padding for list items */
+        }
+        ol {
+            list-style-type: decimal;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+            font-size: 0.9em;
+        }
+         .summary-test-table th .brand-name,
+         .summary-test-table th .ribbon-type {
+            font-size: 0.85em;
+            font-weight: normal;
+            display: block;
+            color: #e0e0e0;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .note {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 10px;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+        .remark {
+            background-color: #e2e3e5;
+            border-left: 5px solid #6c757d;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        .sample-area {
+            width: var(--sample-area-width);
+            height: var(--sample-area-height);
+            border: 1px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 3px auto;
+            padding: 1px;
+            font-size: 0.6em;
+            color: #aaa;
+            box-sizing: border-box;
+            line-height: 1.2;
+        }
+        .sample-area-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .summary-test-table td {
+             text-align: center;
+             height: auto;
+             min-height: 70px;
+             padding: 5px;
+        }
+         .summary-test-table input[type="text"],
+         .summary-test-table select {
+            width: calc(var(--sample-area-width) * 0.95);
+            font-size: 0.8em;
+            padding: 4px;
+            box-sizing: border-box;
+            margin-top: 2px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            text-align: center;
+        }
+        .test-name-col {
+            width: 25%;
+            text-align: left;
+        }
+        .result-col {
+             width: 15%;
+        }
+        .notes-col {
+            width: auto;
+            text-align: left;
+        }
+        .grading-criteria {
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+        .grading-criteria strong {
+            color: var(--heading-color);
+        }
+        .grading-criteria ul {
+            padding-left: 20px;
+            list-style: none;
+        }
+        .grading-criteria li {
+            margin-bottom: 5px;
+        }
+        .grade-excellent { color: var(--accent-green); font-weight: bold; }
+        .grade-good { color: #17a2b8; font-weight: bold; }
+        .grade-fair { color: var(--accent-yellow); font-weight: bold; }
+        .grade-poor { color: var(--accent-red); font-weight: bold; }
+
+        .lab-summary-section ol {
+            padding-left: 20px;
+            list-style-type: decimal-leading-zero; /* For 01, 02, etc. or use 'decimal' for 1, 2 */
+        }
+         .lab-summary-section li {
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+         .lab-summary-section .ribbon-name-summary {
+            font-weight: bold;
+        }
+
+         @media (max-width: 1200px) {
+            .summary-test-table th, .summary-test-table td {
+                font-size: 0.75em;
+            }
+            .sample-area {
+                width: calc(var(--sample-area-width) * 0.8);
+                height: calc(var(--sample-area-height) * 0.8);
+                font-size: 0.55em;
+            }
+            .summary-test-table input[type="text"],
+            .summary-test-table select {
+                 width: calc(var(--sample-area-width) * 0.8);
+                 font-size: 0.7em;
+            }
+        }
+        @media (max-width: 768px) {
+            .summary-test-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch;}
+            .summary-test-table th, .summary-test-table td { white-space: nowrap; }
+            .test-name-col { min-width: 150px !important;}
+            .result-col { min-width: 120px !important;}
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Simplified Ribbon Test Plan <span class="thai">แผนการทดสอบริบบอนอย่างง่าย</span></h1>
+        <p>This plan outlines basic tests for various ribbon types that can be performed without specialized equipment. These are adaptations of standard tests. <span class="thai">แผนนี้สรุปการทดสอบพื้นฐานสำหรับริบบอนประเภทต่างๆ ที่สามารถทำได้โดยไม่ต้องใช้อุปกรณ์พิเศษ เป็นการดัดแปลงมาจากการทดสอบมาตรฐาน</span></p>
+
+        <div class="note">
+            <p><strong>Important Note:</strong> These tests provide a general indication of ribbon performance. For critical applications, always refer to manufacturer specifications or conduct tests with standardized equipment. <span class="thai"><strong>ข้อควรจำ:</strong> การทดสอบเหล่านี้ให้ผลบ่งชี้ประสิทธิภาพของริบบอนในเบื้องต้นเท่านั้น สำหรับการใช้งานที่สำคัญ ควรตรวจสอบคุณสมบัติจากผู้ผลิตหรือทำการทดสอบด้วยอุปกรณ์มาตรฐานเสมอ</span></p>
+        </div>
+
+        <h2>Printing Parameters Used for Testing <span class="thai">พารามิเตอร์การพิมพ์ที่ใช้สำหรับการทดสอบ</span></h2>
+        <div class="printing-parameters-section">
+            <ul>
+                <li><strong>Printer Model:</strong> PR/57 (Sato CL6NX) <span class="thai"><strong>รุ่นเครื่องพิมพ์:</strong> PR/57 (Sato CL6NX)</span></li>
+                <li><strong>Default Speed:</strong> 7 "/s <span class="thai"><strong>ความเร็วเริ่มต้น:</strong> 7 นิ้ว/วินาที</span></li>
+                <li><strong>Default Darkness:</strong> 8 <span class="thai"><strong>ความเข้มเริ่มต้น:</strong> 8</span></li>
+            </ul>
+            <div class="remark">
+                <strong>Remark for Ribbon K504 (KURZ) - Resin (Premium):</strong>
+                <span class="thai"><strong>หมายเหตุสำหรับริบบอน K504 (KURZ) - Resin (Premium):</strong></span>
+                <ul>
+                    <li>Cannot use Darkness=8 at Speed=7"/s. Print quality is poor (faded). <span class="thai">ไม่สามารถใช้ Darkness=8 ที่ Speed=7"/s ได้ คุณภาพงานพิมพ์อยู่ในเกณฑ์แย่ (ซีดจาง)</span></li>
+                    <li>Achieved good print quality at Darkness=8 with Speed=2"/s. <span class="thai">สามารถพิมพ์ได้คุณภาพดีที่ Darkness=8 และ Speed=2"/s</span></li>
+                </ul>
+            </div>
+        </div>
+
+
+        <h2>1. Abrasion Resistance Test (Fingernail/Eraser Rub) <span class="thai">การทดสอบความทนทานต่อการขีดข่วน (ถูด้วยเล็บ/ยางลบ)</span></h2>
+        <div class="test-section">
+            <h3>Objective: <span class="thai">วัตถุประสงค์:</span></h3>
+            <p>To assess how well the print resists rubbing or light scratching. <span class="thai">เพื่อประเมินว่างานพิมพ์ทนต่อการถูหรือการขีดข่วนเบาๆ ได้ดีเพียงใด</span></p>
+            <h3>Materials Needed: <span class="thai">วัสดุที่ต้องการ:</span></h3>
+            <ul>
+                <li>Printed label sample <span class="thai">ตัวอย่างฉลากที่พิมพ์แล้ว</span></li>
+                <li>Your fingernail <span class="thai">เล็บมือของคุณ</span></li>
+                <li>A standard pencil eraser (clean) <span class="thai">ยางลบดินสอมาตรฐาน (สะอาด)</span></li>
+            </ul>
+            <h3>Procedure: <span class="thai">ขั้นตอนการทดสอบ:</span></h3>
+            <ol>
+                <li>Print a sample on the desired label stock. Let it dry/set for a few minutes. <span class="thai">พิมพ์ตัวอย่างลงบนสติกเกอร์ที่ต้องการ ปล่อยให้แห้ง/เซ็ตตัวสักครู่</span></li>
+                <li>Gently rub a section of the print with your fingernail 5-10 times with moderate pressure. <span class="thai">ใช้เล็บมือถูเบาๆ บริเวณที่พิมพ์ 5-10 ครั้ง ด้วยแรงกดปานกลาง</span></li>
+                <li>On another section, rub with a clean eraser 5-10 times with moderate pressure. <span class="thai">ในอีกส่วนหนึ่ง ใช้ยางลบที่สะอาดถู 5-10 ครั้ง ด้วยแรงกดปานกลาง</span></li>
+            </ol>
+            <h3>Evaluation: <span class="thai">การประเมินผล:</span></h3>
+            <p>Observe the print for any smudging, fading, or ink removal. <span class="thai">สังเกตงานพิมพ์ว่ามีการลบเลือน, สีซีดจาง, หรือหมึกหลุดลอกหรือไม่</span></p>
+        </div>
+
+        <h2>2. Coating Hardness / Scratch Test (Fingernail/Coin Edge) <span class="thai">การทดสอบความแข็งของผิวเคลือบ / การทดสอบรอยขีดข่วน (เล็บ/ขอบเหรียญ)</span></h2>
+        <div class="test-section">
+             <h3>Objective: <span class="thai">วัตถุประสงค์:</span></h3>
+            <p>To assess the print's resistance to direct scratching. <span class="thai">เพื่อประเมินความต้านทานของงานพิมพ์ต่อการขีดข่วนโดยตรง</span></p>
+            <h3>Materials Needed: <span class="thai">วัสดุที่ต้องการ:</span></h3>
+            <ul>
+                <li>Printed label sample <span class="thai">ตัวอย่างฉลากที่พิมพ์แล้ว</span></li>
+                <li>Your fingernail <span class="thai">เล็บมือของคุณ</span></li>
+                <li>Edge of a coin (e.g., a 1 Baht coin) <span class="thai">ขอบเหรียญ (เช่น เหรียญ 1 บาท)</span></li>
+            </ul>
+            <h3>Procedure: <span class="thai">ขั้นตอนการทดสอบ:</span></h3>
+            <ol>
+                <li>Print a sample. Let it dry/set. <span class="thai">พิมพ์ตัวอย่าง ปล่อยให้แห้ง/เซ็ตตัว</span></li>
+                <li>Try to scratch the print surface lightly with your fingernail. <span class="thai">พยายามขูดผิวงานพิมพ์เบาๆ ด้วยเล็บมือ</span></li>
+                <li>Try to scratch another section of the print surface with the edge of a coin, applying light to moderate pressure. <span class="thai">พยายามขูดอีกส่วนของผิวงานพิมพ์ด้วยขอบเหรียญ โดยใช้แรงกดเบาถึงปานกลาง</span></li>
+            </ol>
+            <h3>Evaluation: <span class="thai">การประเมินผล:</span></h3>
+            <p>Observe if the ink scratches off or if the surface is damaged. <span class="thai">สังเกตว่าหมึกหลุดลอกจากการขูดหรือไม่ หรือผิวหน้าเสียหายหรือไม่</span></p>
+        </div>
+
+        <h2>3. Chemical Resistance Test <span class="thai">การทดสอบความทนทานต่อสารเคมี</span></h2>
+        <div class="test-section">
+            <h3>Objective: <span class="thai">วัตถุประสงค์:</span></h3>
+            <p>To assess resistance to common liquids and varying alcohol concentrations. <span class="thai">เพื่อประเมินความทนทานต่อของเหลวทั่วไปและความเข้มข้นของแอลกอฮอล์ที่แตกต่างกัน</span></p>
+            <h3>Materials Needed: <span class="thai">วัสดุที่ต้องการ:</span></h3>
+            <ul>
+                <li>Printed label sample <span class="thai">ตัวอย่างฉลากที่พิมพ์แล้ว</span></li>
+                <li>Distilled Water <span class="thai">น้ำกลั่น</span></li>
+                <li>Isopropyl Alcohol: 60%, 70%, 80%, 90%, 100% <span class="thai">ไอโซโพรพิลแอลกอฮอล์: 60%, 70%, 80%, 90%, 100%</span></li>
+                <li>Cotton swab or soft cloth <span class="thai">สำลีก้านหรือผ้านุ่ม</span></li>
+            </ul>
+            <h3>Procedure: <span class="thai">ขั้นตอนการทดสอบ:</span></h3>
+            <ol>
+                <li>Print samples. Let them dry/set thoroughly. <span class="thai">พิมพ์ตัวอย่าง ปล่อยให้แห้ง/เซ็ตตัวอย่างเต็มที่</span></li>
+                <li>For water test: On one part of the print, apply a few drops of distilled water. Let it sit for 5 minutes, then gently wipe with a cloth/swab. <span class="thai">สำหรับการทดสอบด้วยน้ำ: หยดน้ำกลั่นสองสามหยดลงบนส่วนหนึ่งของงานพิมพ์ ทิ้งไว้ 5 นาที แล้วเช็ดเบาๆ ด้วยผ้า/สำลี</span></li>
+                <li>For alcohol tests: On separate parts of the print (or separate samples), apply each concentration of alcohol with a cotton swab and rub gently 5-10 times. Observe immediately and after alcohol has evaporated. <span class="thai">สำหรับการทดสอบด้วยแอลกอฮอล์: บนส่วนต่างๆ ของงานพิมพ์ (หรือตัวอย่างแยกกัน) ใช้สำลีก้านชุบแอลกอฮอล์แต่ละความเข้มข้นถูเบาๆ 5-10 ครั้ง สังเกตผลทันทีและหลังจากแอลกอฮอล์ระเหยไปแล้ว</span></li>
+            </ol>
+            <h3>Evaluation: <span class="thai">การประเมินผล:</span></h3>
+            <p>Observe for any ink bleeding, fading, smudging, or removal for each chemical tested. <span class="thai">สังเกตการซึมของหมึก, สีซีดจาง, การลบเลือน, หรือการหลุดลอกสำหรับสารเคมีแต่ละชนิดที่ทดสอบ</span></p>
+        </div>
+
+        <h2>4. Adhesion Test (Tape Test) <span class="thai">การทดสอบการยึดเกาะ (ทดสอบด้วยเทป)</span></h2>
+        <div class="test-section">
+            <h3>Objective: <span class="thai">วัตถุประสงค์:</span></h3>
+            <p>To assess how well the ink adheres to the label material. <span class="thai">เพื่อประเมินว่าหมึกยึดเกาะกับวัสดุฉลากได้ดีเพียงใด</span></p>
+            <h3>Materials Needed: <span class="thai">วัสดุที่ต้องการ:</span></h3>
+            <ul>
+                <li>Printed label sample <span class="thai">ตัวอย่างฉลากที่พิมพ์แล้ว</span></li>
+                <li>Standard clear office adhesive tape (e.g., Scotch™ Magic Tape) <span class="thai">เทปใสสำนักงานทั่วไป</span></li>
+            </ul>
+            <h3>Procedure: <span class="thai">ขั้นตอนการทดสอบ:</span></h3>
+            <ol>
+                <li>Print a sample. Let it dry/set for at least 1 hour (ideally longer for full adhesion). <span class="thai">พิมพ์ตัวอย่าง ปล่อยให้แห้ง/เซ็ตตัวอย่างน้อย 1 ชั่วโมง (หรือนานกว่านั้นเพื่อให้หมึกยึดเกาะเต็มที่)</span></li>
+                <li>Apply a strip of adhesive tape firmly over the printed area. Rub it down well to ensure good contact. <span class="thai">ติดแถบเทปใสลงบนบริเวณที่พิมพ์ กดให้แน่นเพื่อให้เทปสัมผัสกับหมึกได้ดี</span></li>
+                <li>Quickly pull the tape off at a sharp angle (close to 180 degrees if possible). <span class="thai">ดึงเทปออกอย่างรวดเร็วในมุมแหลม (ใกล้เคียง 180 องศาหากทำได้)</span></li>
+            </ol>
+            <h3>Evaluation: <span class="thai">การประเมินผล:</span></h3>
+            <p>Examine the tape and the label for the amount of ink removed. <span class="thai">ตรวจสอบเทปและฉลากเพื่อดูปริมาณหมึกที่หลุดออกมา</span></p>
+        </div>
+        
+        <h2>5. Heat & Cold Observation <span class="thai">การสังเกตความทนทานต่อความร้อนและความเย็น (เบื้องต้น)</span></h2>
+        <div class="test-section">
+             <h3>Objective: <span class="thai">วัตถุประสงค์:</span></h3>
+            <p>To observe basic stability under moderate temperature variations. <span class="thai">เพื่อสังเกตความคงตัวพื้นฐานภายใต้การเปลี่ยนแปลงอุณหภูมิปานกลาง</span></p>
+            <h3>Materials Needed: <span class="thai">วัสดุที่ต้องการ:</span></h3>
+            <ul>
+                <li>Printed label sample <span class="thai">ตัวอย่างฉลากที่พิมพ์แล้ว</span></li>
+                <li>Your hand / A moderately warm (not hot) surface (e.g., top of a running computer monitor, warm cup) <span class="thai">มือของคุณ / พื้นผิวที่อุ่นปานกลาง (ไม่ร้อนจัด) (เช่น ด้านบนจอคอมพิวเตอร์ที่เปิดอยู่, แก้วน้ำอุ่น)</span></li>
+                <li>Access to a cool environment (e.g., air-conditioned room if ambient is hot, or just room temperature if testing for very cold) <span class="thai">พื้นที่ที่มีอากาศเย็น (เช่น ห้องแอร์หากภายนอกร้อน หรืออุณหภูมิห้องปกติหากทดสอบความเย็นจัด)</span></li>
+            </ul>
+            <h3>Procedure: <span class="thai">ขั้นตอนการทดสอบ:</span></h3>
+            <ol>
+                <li><strong>Heat:</strong> Rub the printed label vigorously with your thumb for 10-15 seconds to generate some friction heat, or place it on a moderately warm surface for 5-10 minutes. Then try to smudge the print. <span class="thai"><strong>ความร้อน:</strong> ใช้นิ้วหัวแม่มือถูฉลากที่พิมพ์แล้วแรงๆ 10-15 วินาทีเพื่อให้เกิดความร้อนจากการเสียดสี หรือวางบนพื้นผิวที่อุ่นปานกลางเป็นเวลา 5-10 นาที จากนั้นลองถูเพื่อให้หมึกเลอะ</span></li>
+                <li><strong>Cold/Condensation:</strong> If applicable for the intended use, place the label in a cooler environment for a short period (e.g., 30 minutes in a fridge, not freezer unless specific). Observe for any print degradation or smudging when condensation forms (if any). <span class="thai"><strong>ความเย็น/การควบแน่น:</strong> หากเกี่ยวข้องกับการใช้งานจริง ให้นำฉลากไปไว้ในที่เย็นกว่าสักครู่ (เช่น 30 นาทีในตู้เย็น แต่ไม่ใช่ช่องแช่แข็ง เว้นแต่จะระบุไว้) สังเกตการเสื่อมสภาพของงานพิมพ์หรือการลบเลือนเมื่อเกิดการควบแน่น (ถ้ามี)</span></li>
+            </ol>
+            <h3>Evaluation: <span class="thai">การประเมินผล:</span></h3>
+            <p>Observe for smudging, cracking, or changes in print quality. <span class="thai">สังเกตการลบเลือน, การแตกร้าว, หรือการเปลี่ยนแปลงคุณภาพงานพิมพ์</span></p>
+        </div>
+
+        <h2>Grading Criteria <span class="thai">เกณฑ์การให้คะแนน/ตัดเกรด</span></h2>
+        <div class="grading-section">
+            <p>Use the following simplified grading scale based on visual observation: <span class="thai">ใช้เกณฑ์การให้คะแนนอย่างง่ายต่อไปนี้ตามการสังเกตด้วยสายตา:</span></p>
+            <div class="grading-criteria">
+                <ul>
+                    <li><span class="grade-excellent">Excellent (ดีเยี่ยม):</span> No visible change, smudging, or ink removal. Print remains intact and clear. <span class="thai">ไม่พบการเปลี่ยนแปลง, การลบเลือน, หรือหมึกหลุดลอกที่มองเห็นได้ งานพิมพ์ยังคงสมบูรณ์และชัดเจน</span></li>
+                    <li><span class="grade-good">Good (ดี):</span> Very minor smudging or fading, only noticeable upon close inspection. Most ink remains. <span class="thai">มีการลบเลือนหรือสีซีดจางเล็กน้อยมาก สังเกตเห็นได้เมื่อตรวจสอบอย่างใกล้ชิด หมึกส่วนใหญ่ยังคงอยู่</span></li>
+                    <li><span class="grade-fair">Fair (พอใช้):</span> Some noticeable smudging, fading, or slight ink removal. Print is still largely legible but shows wear. <span class="thai">มีการลบเลือน, สีซีดจาง, หรือหมึกหลุดลอกเล็กน้อยที่สังเกตเห็นได้ งานพิมพ์ยังคงอ่านได้เป็นส่วนใหญ่แต่แสดงร่องรอยการสึกหรอ</span></li>
+                    <li><span class="grade-poor">Poor (แย่):</span> Significant smudging, fading, or ink removal. Print may become difficult to read or is largely compromised. <span class="thai">มีการลบเลือน, สีซีดจาง, หรือหมึกหลุดลอกอย่างมีนัยสำคัญ งานพิมพ์อาจอ่านได้ยากหรือเสียหายเป็นส่วนใหญ่</span></li>
+                </ul>
+            </div>
+             <p><strong>Reasoning for Grade:</strong> Briefly explain why a particular grade was assigned (e.g., "Slight smudge with eraser after 5 rubs," "No ink transfer with tape test," "Ink completely removed by alcohol 90%"). <span class="thai"><strong>เหตุผลในการให้เกรด:</strong> อธิบายสั้นๆ ว่าทำไมจึงให้เกรดนั้นๆ (เช่น "เกิดรอยเปื้อนเล็กน้อยเมื่อถูด้วยยางลบ 5 ครั้ง", "ไม่มีการถ่ายเทของหมึกในการทดสอบด้วยเทป", "หมึกถูกลบออกทั้งหมดด้วยแอลกอฮอล์ 90%")</span></p>
+        </div>
+
+        <!-- Test Results - Individual Tables per Ribbon -->
+        <h2>Ribbon Test Results <span class="thai">ผลการทดสอบริบบอน</span></h2>
+        <p>Attach physical test samples (approx. 100mm x 20mm) and record observations for each ribbon. <span class="thai">ติดตัวอย่างริบบอนที่ทดสอบ (ขนาดประมาณ 100 มม. x 20 มม.) และบันทึกข้อสังเกตสำหรับริบบอนแต่ละชนิด</span></p>
+
+        <!-- K2000 (KURZ) -->
+        <h4>Ribbon: K2000 <span class="brand-name">(KURZ)</span> <span class="ribbon-type">- Wax/Resin (Std)</span></h4>
+        <table class="summary-test-table">
+            <thead>
+                <tr>
+                    <th class="test-name-col">Test / Property <span class="thai">การทดสอบ / คุณสมบัติ</span></th>
+                    <th class="result-col">Result / Sample <span class="thai">ผลลัพธ์ / ตัวอย่าง</span></th>
+                    <th class="notes-col">Observations / Grade & Reason <span class="thai">ข้อสังเกต / เกรดและเหตุผล</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="test-name-col">Abrasion (Eraser) <br><span class="thai">การขัดถู (ยางลบ)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Scratch (Coin) <br><span class="thai">รอยขีดข่วน (เหรียญ)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Chemical (Water) <br><span class="thai">สารเคมี (น้ำกลั่น)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Chemical (Alcohol 60%) <br><span class="thai">สารเคมี (แอลกอฮอล์ 60%)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Chemical (Alcohol 70%) <br><span class="thai">สารเคมี (แอลกอฮอล์ 70%)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Chemical (Alcohol 80%) <br><span class="thai">สารเคมี (แอลกอฮอล์ 80%)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Chemical (Alcohol 90%) <br><span class="thai">สารเคมี (แอลกอฮอล์ 90%)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Chemical (Alcohol 100%) <br><span class="thai">สารเคมี (แอลกอฮอล์ 100%)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Adhesion (Tape) <br><span class="thai">การยึดเกาะ (เทป)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Heat (Smudge) <br><span class="thai">ความร้อน (ลบเลือน)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Water Resistance <br><span class="thai">(From Chemical Test)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Refer to Chem Test</div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason (from Water test)"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col"><strong>Overall Rating:</strong> <br><span class="thai"><strong>คะแนนโดยรวม:</strong></span></td>
+                    <td colspan="2"><input type="text" placeholder="Overall Grade & Justification" style="width: 95%;"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- K102N (KURZ) -->
+        <h4>Ribbon: K102N <span class="brand-name">(KURZ)</span> <span class="ribbon-type">- Wax (Standard)</span></h4>
+        <table class="summary-test-table">
+            <thead>
+                <tr>
+                    <th class="test-name-col">Test / Property <span class="thai">การทดสอบ / คุณสมบัติ</span></th>
+                    <th class="result-col">Result / Sample <span class="thai">ผลลัพธ์ / ตัวอย่าง</span></th>
+                    <th class="notes-col">Observations / Grade & Reason <span class="thai">ข้อสังเกต / เกรดและเหตุผล</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                 <tr>
+                    <td class="test-name-col">Abrasion (Eraser) <br><span class="thai">การขัดถู (ยางลบ)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Scratch (Coin) <br><span class="thai">รอยขีดข่วน (เหรียญ)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Chemical (Water) <br><span class="thai">สารเคมี (น้ำกลั่น)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Chemical (Alcohol 60%) <br><span class="thai">สารเคมี (แอลกอฮอล์ 60%)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Chemical (Alcohol 70%) <br><span class="thai">สารเคมี (แอลกอฮอล์ 70%)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Chemical (Alcohol 80%) <br><span class="thai">สารเคมี (แอลกอฮอล์ 80%)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Chemical (Alcohol 90%) <br><span class="thai">สารเคมี (แอลกอฮอล์ 90%)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Chemical (Alcohol 100%) <br><span class="thai">สารเคมี (แอลกอฮอล์ 100%)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Adhesion (Tape) <br><span class="thai">การยึดเกาะ (เทป)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Heat (Smudge) <br><span class="thai">ความร้อน (ลบเลือน)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Water Resistance <br><span class="thai">(From Chemical Test)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Refer to Chem Test</div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason (from Water test)"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col"><strong>Overall Rating:</strong> <br><span class="thai"><strong>คะแนนโดยรวม:</strong></span></td>
+                    <td colspan="2"><input type="text" placeholder="Overall Grade & Justification" style="width: 95%;"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- K103N (KURZ) -->
+        <h4>Ribbon: K103N <span class="brand-name">(KURZ)</span> <span class="ribbon-type">- Wax (Premium)</span></h4>
+         <table class="summary-test-table">
+            <thead>
+                <tr>
+                    <th class="test-name-col">Test / Property <span class="thai">การทดสอบ / คุณสมบัติ</span></th>
+                    <th class="result-col">Result / Sample <span class="thai">ผลลัพธ์ / ตัวอย่าง</span></th>
+                    <th class="notes-col">Observations / Grade & Reason <span class="thai">ข้อสังเกต / เกรดและเหตุผล</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                 <tr>
+                    <td class="test-name-col">Abrasion (Eraser) <br><span class="thai">การขัดถู (ยางลบ)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Scratch (Coin) <br><span class="thai">รอยขีดข่วน (เหรียญ)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Chemical (Water) <br><span class="thai">สารเคมี (น้ำกลั่น)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Chemical (Alcohol 60%) <br><span class="thai">สารเคมี (แอลกอฮอล์ 60%)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Chemical (Alcohol 70%) <br><span class="thai">สารเคมี (แอลกอฮอล์ 70%)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Chemical (Alcohol 80%) <br><span class="thai">สารเคมี (แอลกอฮอล์ 80%)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Chemical (Alcohol 90%) <br><span class="thai">สารเคมี (แอลกอฮอล์ 90%)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Chemical (Alcohol 100%) <br><span class="thai">สารเคมี (แอลกอฮอล์ 100%)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Adhesion (Tape) <br><span class="thai">การยึดเกาะ (เทป)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Heat (Smudge) <br><span class="thai">ความร้อน (ลบเลือน)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Water Resistance <br><span class="thai">(From Chemical Test)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Refer to Chem Test</div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason (from Water test)"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col"><strong>Overall Rating:</strong> <br><span class="thai"><strong>คะแนนโดยรวม:</strong></span></td>
+                    <td colspan="2"><input type="text" placeholder="Overall Grade & Justification" style="width: 95%;"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- K308 (KURZ) -->
+        <h4>Ribbon: K308 <span class="brand-name">(KURZ)</span> <span class="ribbon-type">- Wax/Resin (Prem)</span></h4>
+        <table class="summary-test-table">
+            <thead>
+                <tr>
+                    <th class="test-name-col">Test / Property <span class="thai">การทดสอบ / คุณสมบัติ</span></th>
+                    <th class="result-col">Result / Sample <span class="thai">ผลลัพธ์ / ตัวอย่าง</span></th>
+                    <th class="notes-col">Observations / Grade & Reason <span class="thai">ข้อสังเกต / เกรดและเหตุผล</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                 <tr>
+                    <td class="test-name-col">Abrasion (Eraser) <br><span class="thai">การขัดถู (ยางลบ)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Scratch (Coin) <br><span class="thai">รอยขีดข่วน (เหรียญ)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Chemical (Water) <br><span class="thai">สารเคมี (น้ำกลั่น)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Chemical (Alcohol 60%) <br><span class="thai">สารเคมี (แอลกอฮอล์ 60%)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Chemical (Alcohol 70%) <br><span class="thai">สารเคมี (แอลกอฮอล์ 70%)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Chemical (Alcohol 80%) <br><span class="thai">สารเคมี (แอลกอฮอล์ 80%)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Chemical (Alcohol 90%) <br><span class="thai">สารเคมี (แอลกอฮอล์ 90%)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Chemical (Alcohol 100%) <br><span class="thai">สารเคมี (แอลกอฮอล์ 100%)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Adhesion (Tape) <br><span class="thai">การยึดเกาะ (เทป)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Heat (Smudge) <br><span class="thai">ความร้อน (ลบเลือน)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Water Resistance <br><span class="thai">(From Chemical Test)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Refer to Chem Test</div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason (from Water test)"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col"><strong>Overall Rating:</strong> <br><span class="thai"><strong>คะแนนโดยรวม:</strong></span></td>
+                    <td colspan="2"><input type="text" placeholder="Overall Grade & Justification" style="width: 95%;"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- K504 (KURZ) -->
+        <h4>Ribbon: K504 <span class="brand-name">(KURZ)</span> <span class="ribbon-type">- Resin (Premium)</span></h4>
+        <table class="summary-test-table">
+            <thead>
+                <tr>
+                    <th class="test-name-col">Test / Property <span class="thai">การทดสอบ / คุณสมบัติ</span></th>
+                    <th class="result-col">Result / Sample <span class="thai">ผลลัพธ์ / ตัวอย่าง</span></th>
+                    <th class="notes-col">Observations / Grade & Reason <span class="thai">ข้อสังเกต / เกรดและเหตุผล</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                 <tr>
+                    <td class="test-name-col">Abrasion (Eraser) <br><span class="thai">การขัดถู (ยางลบ)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Scratch (Coin) <br><span class="thai">รอยขีดข่วน (เหรียญ)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Chemical (Water) <br><span class="thai">สารเคมี (น้ำกลั่น)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Chemical (Alcohol 60%) <br><span class="thai">สารเคมี (แอลกอฮอล์ 60%)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Chemical (Alcohol 70%) <br><span class="thai">สารเคมี (แอลกอฮอล์ 70%)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Chemical (Alcohol 80%) <br><span class="thai">สารเคมี (แอลกอฮอล์ 80%)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Chemical (Alcohol 90%) <br><span class="thai">สารเคมี (แอลกอฮอล์ 90%)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Chemical (Alcohol 100%) <br><span class="thai">สารเคมี (แอลกอฮอล์ 100%)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Adhesion (Tape) <br><span class="thai">การยึดเกาะ (เทป)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Heat (Smudge) <br><span class="thai">ความร้อน (ลบเลือน)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Attach Sample <br><span class="thai">ติดตัวอย่าง</span></div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col">Water Resistance <br><span class="thai">(From Chemical Test)</span></td>
+                    <td><div class="sample-area-container"><div class="sample-area">Refer to Chem Test</div></div></td>
+                    <td><input type="text" placeholder="Grade & Reason (from Water test)"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col"><strong>Overall Rating:</strong> <br><span class="thai"><strong>คะแนนโดยรวม:</strong></span></td>
+                    <td colspan="2"><input type="text" placeholder="Overall Grade & Justification" style="width: 95%;"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Lab Visual Assessment Summary -->
+        <h2>Lab Visual Assessment Summary: Chemical (Alcohol) Resistance <span class="thai">สรุปผลการประเมินด้วยสายตาจากห้องปฏิบัติการ: ความทนทานต่อสารเคมี (แอลกอฮอล์)</span></h2>
+        <div class="lab-summary-section">
+            <p>Ranking of print beauty and clarity after alcohol tests (higher number is better): <span class="thai">การจัดอันดับความสวยงามและความคมชัดของงานพิมพ์หลังการทดสอบด้วยแอลกอฮอล์ (ตัวเลขสูงหมายถึงดีกว่า):</span></p>
+            <ol reversed> <!-- reversed attribute for 5 to 1 ranking -->
+                <li><span class="ribbon-name-summary">Ribbon: K504 (KURZ) - Resin (Premium)</span></li>
+                <li><span class="ribbon-name-summary">Ribbon: K102N (KURZ) - Wax (Standard)</span></li>
+                <li><span class="ribbon-name-summary">Ribbon: K2000 (KURZ) - Wax/Resin (Std)</span></li>
+                <li><span class="ribbon-name-summary">Ribbon: K308 (KURZ) - Wax/Resin (Prem)</span></li>
+                <li><span class="ribbon-name-summary">Ribbon: K103N (KURZ) - Wax (Premium)</span></li>
+            </ol>
+            <p class="note">Note: This ranking is based on visual assessment by lab personnel. Actual performance may vary depending on specific alcohol concentration and label material.
+                <span class="thai">หมายเหตุ: การจัดอันดับนี้อ้างอิงจากการประเมินด้วยสายตาโดยเจ้าหน้าที่ห้องปฏิบัติการ ประสิทธิภาพจริงอาจแตกต่างกันไปขึ้นอยู่กับความเข้มข้นของแอลกอฮอล์และวัสดุฉลากที่ใช้</span>
+            </p>
+        </div>
+
+
+        <!-- General Test Information -->
+        <h4 style="margin-top: 30px;">General Test Information <span class="thai">ข้อมูลการทดสอบทั่วไป</span></h4>
+        <table class="summary-test-table">
+            <tbody>
+                 <tr>
+                    <td class="test-name-col" style="width: 25%;"><strong>Label Stock Used for All Tests:</strong> <br><span class="thai"><strong>สติกเกอร์ที่ใช้สำหรับการทดสอบทั้งหมด:</strong></span></td>
+                    <td colspan="2"><input type="text" placeholder="Specify label material / ระบุชนิดสติกเกอร์" style="width:95%;"></td>
+                </tr>
+                <tr>
+                    <td class="test-name-col" style="width: 25%;"><strong>Date Tested:</strong> <br><span class="thai"><strong>วันที่ทดสอบ:</strong></span></td>
+                    <td style="width: 37.5%;"><input type="date" style="width:90%;"></td>
+                    <td class="test-name-col" style="width: 37.5%;"><strong>Tested By:</strong> <br><span class="thai"><strong>ผู้ทดสอบ:</strong></span> <input type="text" placeholder="Your Name / ชื่อผู้ทดสอบ" style="width:90%;"></td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+</body>
+</html>

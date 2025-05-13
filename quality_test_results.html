@@ -1,0 +1,420 @@
+--- START OF FILE Ribbon Test Executive Summary _ สรุปผลการทดสอบริบบอนสำหรับผู้บริหาร All.html ---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ribbon Test Executive Summary / สรุปผลการทดสอบริบบอนสำหรับผู้บริหาร</title>
+    <style>
+        :root {
+            --bg-color: #f9fafb; /* Lighter background */
+            --card-bg: #ffffff;
+            --text-color: #374151; /* Softer black */
+            --heading-color: #1e40af; /* Deep blue for headings */
+            --subheading-color: #1d4ed8; /* Slightly lighter blue */
+            --border-color: #e5e7eb;
+            --shadow-color: rgba(0, 0, 0, 0.06);
+            --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            --accent-green: #10b981;
+            --accent-yellow: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-blue: #3b82f6;
+        }
+        body {
+            font-family: var(--font-primary);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background-color: var(--card-bg);
+            padding: 25px 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 16px var(--shadow-color);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        header h1 {
+            color: var(--heading-color);
+            margin: 0 0 5px 0;
+            font-size: 2em; /* Larger title */
+            font-weight: 700;
+        }
+        header p {
+            margin: 5px 0;
+            color: #6b7280; /* Softer grey for subtitle */
+            font-size: 1.1em;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: var(--subheading-color);
+            font-size: 1.5em;
+            margin-top: 0;
+            margin-bottom: 18px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 600;
+        }
+        .thai {
+            color: #6b7280;
+            font-style: italic;
+            font-size: 0.85em;
+            margin-left: 8px;
+            display: inline;
+        }
+        h1 .thai, h2 .thai { display: block; font-size: 0.75em; margin-top: 3px;}
+
+        .ribbon-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .ribbon-card {
+            background-color: #fdfdff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px var(--shadow-color);
+        }
+        .ribbon-card h3 {
+            color: var(--heading-color);
+            font-size: 1.25em;
+            margin-top: 0;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        .ribbon-card h3 .brand {
+            font-weight: 400;
+            font-size: 0.8em;
+            color: #4b5563;
+            display: block;
+        }
+        .ribbon-card .ribbon-type {
+            font-size: 0.9em;
+            color: var(--subheading-color);
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+        .test-result {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 0.9em;
+        }
+        .test-result:last-child {
+            border-bottom: none;
+        }
+        .test-result .label {
+            font-weight: 500;
+            color: #4b5563;
+        }
+        .test-result .grade, .lab-summary-section .grade { /* Ensure grades in lab summary also styled */
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            display: inline-block; /* For proper padding and border */
+        }
+        .grade-excellent { background-color: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+        .grade-good { background-color: #cffafe; color: #0e7490; border: 1px solid #a5f3fc; }
+        .grade-fair { background-color: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+        .grade-poor { background-color: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+
+        .overall-rating {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed var(--border-color);
+        }
+        .overall-rating strong {
+            color: var(--secondary-heading-color);
+            font-size: 1em;
+        }
+        .overall-rating p {
+            margin: 5px 0 0 0;
+            font-size: 0.95em;
+        }
+        .lab-summary-section ol {
+            list-style-type: decimal;
+            padding-left: 20px;
+        }
+        .lab-summary-section ol li {
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+        .lab-summary-section .ribbon-name-summary {
+             margin-right: 10px;
+        }
+
+        .recommendation-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #eef2ff; /* Light indigo for recommendation */
+            border: 1px solid #c7d2fe;
+            border-left: 5px solid var(--accent-blue);
+            border-radius: 8px;
+        }
+        .recommendation-section h2 {
+            color: var(--accent-blue);
+            border-bottom-color: var(--accent-blue);
+        }
+        .recommendation-section ul { list-style: disc; padding-left: 20px; margin-top: 10px;}
+        .recommendation-section li { margin-bottom: 8px; }
+
+        .conflict-note {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fffbeb;
+            border: 1px solid #fef08a;
+            border-left: 5px solid var(--accent-yellow);
+            border-radius: 6px;
+            font-size: 0.9em;
+        }
+        .conflict-note h4 {
+            margin-top: 0;
+            color: #b45309;
+        }
+        .conflict-note ul { list-style-type: '→ '; padding-left: 15px; }
+
+        .signature-section {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            text-align: center;
+        }
+        .signature-block label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--secondary-heading-color);
+            font-size: 0.95em;
+        }
+        .signature-line {
+            display: block;
+            width: 80%;
+            margin: 40px auto 5px auto;
+            border-bottom: 1px solid var(--text-color);
+        }
+        .signature-name {
+            font-size: 0.9em;
+            color: #4b5563;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 10px;
+            font-size: 0.95em;
+            margin-bottom: 15px;
+        }
+        .remark {
+            background-color: #fffbeb; /* Light yellow for remarks */
+            border: 1px solid #fef3c7;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            margin-top: 15px;
+        }
+        .remark strong {
+            color: #b45309; /* Darker yellow for emphasis */
+        }
+
+
+        @media (max-width: 768px) {
+            .ribbon-summary-grid {
+                grid-template-columns: 1fr; /* Stack cards on smaller screens */
+            }
+            header h1 { font-size: 1.7em; }
+            h2 { font-size: 1.3em; }
+            .info-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Ribbon Test Executive Summary <span class="thai">สรุปผลการทดสอบริบบอนสำหรับผู้บริหาร</span></h1>
+            <p>Evaluation of Alternative Thermal Transfer Ribbons <span class="thai">การประเมินริบบอนถ่ายโอนความร้อนทางเลือก</span></p>
+        </header>
+
+        <div class="section">
+            <h2>Test Overview <span class="thai">ภาพรวมการทดสอบ</span></h2>
+            <div class="info-grid">
+                <div><strong>Printer Model:</strong> PR/57 (Sato CL6NX) <span class="thai"><strong>รุ่นเครื่องพิมพ์:</strong> PR/57 (Sato CL6NX)</span></div>
+                <div><strong>Test Date:</strong> 12.May.2025 <span class="thai"><strong>วันที่ทดสอบ:</strong> 12 พฤษภาคม 2568</span></div>
+                <div><strong>Default Speed:</strong> 7 "/s <span class="thai"><strong>ความเร็วพิมพ์:</strong> 7 นิ้ว/วินาที</span></div>
+                <div><strong>Default Darkness:</strong> 8 <span class="thai"><strong>ความเข้ม:</strong> 8</span></div>
+            </div>
+             <div class="remark">
+                <strong>Special Note for K504 (Resin):</strong> Print quality at 7"/s, Darkness 8 was poor (faded). Optimal results achieved at 2"/s, Darkness 8.
+                <span class="thai"><strong>หมายเหตุพิเศษสำหรับ K504 (Resin):</strong> คุณภาพการพิมพ์ที่ความเร็ว 7"/s, ความเข้ม 8 ไม่ดี (ซีดจาง) ผลลัพธ์ที่ดีที่สุดได้ที่ความเร็ว 2"/s, ความเข้ม 8</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Ribbon Performance Summary <span class="thai">สรุปประสิทธิภาพริบบอน</span></h2>
+            <div class="ribbon-summary-grid">
+                <!-- K2000 Card -->
+                <div class="ribbon-card">
+                    <h3>K2000 <span class="brand">(KURZ)</span></h3>
+                    <p class="ribbon-type">Wax/Resin (Standard) <span class="thai">แว็กซ์/เรซิ่น (มาตรฐาน)</span></p>
+                    <div class="test-result"><span class="label">Abrasion (Eraser):</span> <span class="grade grade-fair">Fair</span></div>
+                    <div class="test-result"><span class="label">Scratch (Coin):</span> <span class="grade grade-excellent">Excellent</span></div>
+                    <div class="test-result"><span class="label">Chemical (Alcohol):</span> <span class="grade grade-excellent">Excellent</span></div>
+                    <div class="test-result"><span class="label">Adhesion (Tape):</span> <span class="grade grade-excellent">Excellent</span></div>
+                    <div class="test-result"><span class="label">Heat (Smudge):</span> <span class="grade grade-excellent">Excellent</span></div>
+                    <div class="test-result"><span class="label">Water Resistance:</span> <span class="grade grade-excellent">Excellent</span></div>
+                    <div class="overall-rating">
+                        <strong>Overall: <span class="grade grade-good">Good</span></strong>
+                        <p>Balanced performance, very good scratch and chemical resistance. The image is still legible but there are smears.</p>
+                        <p class="thai">ประสิทธิภาพสมดุล ทนรอยขีดข่วนและสารเคมีได้ดีมาก ภาพยังคงอ่านออกได้แต่มีรอยเปื้อน</p>
+                    </div>
+                </div>
+
+                <!-- K102N Card -->
+                <div class="ribbon-card">
+                    <h3>K102N <span class="brand">(KURZ)</span></h3>
+                    <p class="ribbon-type">Wax (Standard) <span class="thai">แว็กซ์ (มาตรฐาน)</span></p>
+                    <div class="test-result"><span class="label">Abrasion (Eraser):</span> <span class="grade grade-fair">Fair</span></div>
+                    <div class="test-result"><span class="label">Scratch (Coin):</span> <span class="grade grade-fair">Fair</span></div>
+                    <div class="test-result"><span class="label">Chemical (Alcohol):</span> <span class="grade grade-excellent">Excellent</span></div>
+                    <div class="test-result"><span class="label">Adhesion (Tape):</span> <span class="grade grade-excellent">Excellent</span></div>
+                    <div class="test-result"><span class="label">Heat (Smudge):</span> <span class="grade grade-excellent">Excellent</span></div>
+                    <div class="test-result"><span class="label">Water Resistance:</span> <span class="grade grade-excellent">Excellent</span></div>
+                    <div class="overall-rating">
+                        <strong>Overall: <span class="grade grade-good">Good (Conditionally)</span></strong>
+                        <p>Surprisingly good chemical resistance for a wax. Fair abrasion/scratch. Some noticeable smudging for Abrasion and Scratch tests.</p>
+                        <p class="thai">ทนสารเคมีได้ดีเกินคาดสำหรับริบบอนแว็กซ์ ทนการขีดข่วน/ถูได้ปานกลาง มีรอยเปื้อนที่สังเกตได้จากการทดสอบการขัดถูและรอยขีดข่วน</p>
+                    </div>
+                </div>
+
+                <!-- K103N Card -->
+                <div class="ribbon-card">
+                    <h3>K103N <span class="brand">(KURZ)</span></h3>
+                    <p class="ribbon-type">Wax (Premium) <span class="thai">แว็กซ์ (พรีเมียม)</span></p>
+                    <div class="test-result"><span class="label">Abrasion (Eraser):</span> <span class="grade grade-fair">Fair</span></div>
+                    <div class="test-result"><span class="label">Scratch (Coin):</span> <span class="grade grade-good">Good</span></div>
+                    <div class="test-result"><span class="label">Chemical (Alcohol):</span> <span class="grade grade-excellent">Excellent</span></div>
+                    <div class="test-result"><span class="label">Adhesion (Tape):</span> <span class="grade grade-excellent">Excellent</span></div>
+                    <div class="test-result"><span class="label">Heat (Smudge):</span> <span class="grade grade-excellent">Excellent</span></div>
+                    <div class="test-result"><span class="label">Water Resistance:</span> <span class="grade grade-excellent">Excellent</span></div>
+                    <div class="overall-rating">
+                        <strong>Overall: <span class="grade grade-good">Good (Conditionally)</span></strong>
+                        <p>Better scratch resistance than K102N. Print is still legible but there are smears for Abrasion test.</p>
+                        <p class="thai">ทนรอยขีดข่วนได้ดีกว่า K102N ภาพยังคงอ่านออกได้แต่มีรอยเปื้อนจากการทดสอบการขัดถู</p>
+                    </div>
+                </div>
+
+                <!-- K308 Card -->
+                <div class="ribbon-card">
+                    <h3>K308 <span class="brand">(KURZ)</span></h3>
+                    <p class="ribbon-type">Wax/Resin (Premium) <span class="thai">แว็กซ์/เรซิ่น (พรีเมียม)</span></p>
+                    <div class="test-result"><span class="label">Abrasion (Eraser):</span> <span class="grade grade-fair">Fair</span></div>
+                    <div class="test-result"><span class="label">Scratch (Coin):</span> <span class="grade grade-excellent">Excellent</span></div>
+                    <div class="test-result"><span class="label">Chemical (Alcohol):</span> <span class="grade grade-excellent">Excellent</span></div>
+                    <div class="test-result"><span class="label">Adhesion (Tape):</span> <span class="grade grade-excellent">Excellent</span></div>
+                    <div class="test-result"><span class="label">Heat (Smudge):</span> <span class="grade grade-excellent">Excellent</span></div>
+                    <div class="test-result"><span class="label">Water Resistance:</span> <span class="grade grade-excellent">Excellent</span></div>
+                    <div class="overall-rating">
+                        <strong>Overall: <span class="grade grade-good">Good</span></strong>
+                        <p>Strong overall durability. Fading or slight ink removal for Abrasion test.</p>
+                        <p class="thai">ความทนทานโดยรวมแข็งแกร่ง มีการซีดจางหรือหมึกหลุดเล็กน้อยในการทดสอบการขัดถู</p>
+                    </div>
+                </div>
+
+                <!-- K504 Card -->
+                <div class="ribbon-card">
+                    <h3>K504 <span class="brand">(KURZ)</span></h3>
+                    <p class="ribbon-type">Resin (Premium) <span class="thai">เรซิ่น (พรีเมียม)</span></p>
+                    <div class="test-result"><span class="label">Abrasion (Eraser):</span> <span class="grade grade-good">Good</span></div>
+                    <div class="test-result"><span class="label">Scratch (Coin):</span> <span class="grade grade-excellent">Excellent</span></div>
+                    <div class="test-result"><span class="label">Chemical (Alcohol):</span> <span class="grade grade-excellent">Excellent</span></div>
+                    <div class="test-result"><span class="label">Adhesion (Tape):</span> <span class="grade grade-excellent">Excellent</span></div>
+                    <div class="test-result"><span class="label">Heat (Smudge):</span> <span class="grade grade-excellent">Excellent</span></div>
+                    <div class="test-result"><span class="label">Water Resistance:</span> <span class="grade grade-excellent">Excellent</span></div>
+                    <div class="overall-rating">
+                        <strong>Overall: <span class="grade grade-excellent">Excellent (with speed adjustment)</span></strong>
+                        <p>Top-tier durability across all tests. Requires slower print speed for optimal clarity.</p>
+                        <p class="thai">ความทนทานระดับสูงสุดในทุกการทดสอบ ต้องการความเร็วในการพิมพ์ที่ช้าลงเพื่อความคมชัดสูงสุด</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section lab-summary-section">
+            <h3>Lab Visual Assessment: Chemical (Alcohol) Resistance
+                <span class="thai">สรุปผลการประเมินด้วยสายตาจากห้องปฏิบัติการ: ความทนทานต่อสารเคมี (แอลกอฮอล์)</span>
+            </h3>
+            <p>Ranking of print aesthetics and clarity after alcohol tests (based on visual assessment, from most to least beautiful/clear):
+                <span class="thai">การจัดอันดับความสวยงามและความคมชัดของงานพิมพ์หลังการทดสอบด้วยแอลกอฮอล์ (ตามการประเมินด้วยสายตา จากสวยงาม/คมชัดที่สุดไปน้อยที่สุด):</span>
+            </p>
+            <ol>
+                <li><span class="ribbon-name-summary">K504 (KURZ) - Resin (Premium)</span> – <span class="grade grade-excellent">Excellent</span></li>
+                <li><span class="ribbon-name-summary">K102N (KURZ) - Wax (Standard)</span> – <span class="grade grade-good">Good</span></li>
+                <li><span class="ribbon-name-summary">K2000 (KURZ) - Wax/Resin (Std)</span> – <span class="grade grade-good">Good</span></li>
+                <li><span class="ribbon-name-summary">K308 (KURZ) - Wax/Resin (Prem)</span> – <span class="grade grade-fair">Fair</span></li>
+                <li><span class="ribbon-name-summary">K103N (KURZ) - Wax (Premium)</span> – <span class="grade grade-fair">Fair</span></li>
+            </ol>
+            <div class="conflict-note">
+                <h4>Contradictory Finding Alert <span class="thai">ข้อสังเกตข้อมูลขัดแย้ง</span></h4>
+                <p>The lab's visual ranking for alcohol resistance shows K102N (Standard Wax) performing unexpectedly well (rated "Good"), surpassing some Wax/Resin types in visual appeal post-test. This contradicts general material expectations for durability against solvents.
+                    <span class="thai">การจัดอันดับด้วยสายตาจากห้องปฏิบัติการสำหรับความทนทานต่อแอลกอฮอล์ แสดงให้เห็นว่า K102N (Wax Standard) มีประสิทธิภาพดีเกินคาด (ประเมิน "ดี") โดยมีความสวยงามหลังการทดสอบดีกว่าริบบอน Wax/Resin บางประเภท ซึ่งขัดแย้งกับคุณสมบัติทั่วไปของวัสดุในการทนทานต่อสารละลาย</span>
+                </p>
+                <p>
+                    <strong>Potential Reasons / <span class="thai">เหตุผลที่เป็นไปได้:</span></strong>
+                    <ul>
+                        <li>Specific formulation of K102N. <span class="thai">สูตรเฉพาะของ K102N</span></li>
+                        <li>Interaction with the test label stock. <span class="thai">ปฏิกิริยากับสติกเกอร์ที่ใช้ทดสอบ</span></li>
+                        <li>Variability in manual test application. <span class="thai">ความแปรปรวนในการทดสอบด้วยมือ</span></li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+
+        <div class="section recommendation-section">
+            <h2>Recommendations <span class="thai">ข้อเสนอแนะ</span></h2>
+            <ul>
+                <li><strong>For high durability & chemical resistance (if print speed can be adjusted):</strong> K504 (Resin) is the top performer. <span class="thai">สำหรับการใช้งานที่ต้องการความทนทานและทนสารเคมีสูง (หากปรับความเร็วพิมพ์ได้): K504 (Resin) ให้ผลดีที่สุด</span></li>
+                <li><strong>For balanced performance with good scratch/chemical resistance:</strong> K2000 (Wax/Resin Std) and K308 (Wax/Resin Prem) are strong candidates. <span class="thai">สำหรับประสิทธิภาพที่สมดุลพร้อมความทนทานต่อรอยขีดข่วน/สารเคมีที่ดี: K2000 (Wax/Resin Std) และ K308 (Wax/Resin Prem) เป็นตัวเลือกที่น่าสนใจ</span></li>
+                <li><strong>For cost-sensitive applications requiring moderate durability:</strong> K103N (Wax Premium) shows good results, particularly in scratch and heat resistance for a wax ribbon. K102N's alcohol resistance is noteworthy but requires confirmation for specific applications. <span class="thai">สำหรับการใช้งานที่คำนึงถึงต้นทุนและต้องการความทนทานปานกลาง: K103N (Wax Premium) ให้ผลลัพธ์ที่ดี โดยเฉพาะความทนทานต่อรอยขีดข่วนและความร้อนสำหรับริบบอนแว็กซ์ ส่วนความทนทานต่อแอลกอฮอล์ของ K102N นั้นน่าสนใจ แต่ต้องมีการยืนยันสำหรับการใช้งานเฉพาะ</span></li>
+                <li><strong>Action:</strong> Consider application-specific needs against cost and test results. Further testing on actual product labels under real-world conditions is advised before final selection. <span class="thai">สิ่งที่ต้องทำ: พิจารณาความต้องการเฉพาะของแต่ละการใช้งานเทียบกับต้นทุนและผลการทดสอบ แนะนำให้ทดสอบเพิ่มเติมบนฉลากผลิตภัณฑ์จริงภายใต้สภาวะการใช้งานจริงก่อนการตัดสินใจขั้นสุดท้าย</span></li>
+            </ul>
+        </div>
+
+
+        <div class="signature-section">
+            <div class="signature-block">
+                <label>Lab Officer (Chemical & Water Tests) <span class="thai">เจ้าหน้าที่ห้องปฏิบัติการ (ทดสอบสารเคมีและน้ำ)</span></label>
+                <div class="signature-line"></div>
+                <div class="signature-name">(Name / <span class="thai">ชื่อ</span>)</div>
+            </div>
+            <div class="signature-block">
+                <label>Primary Tester (Other Tests) <span class="thai">ผู้ทดสอบหลัก (การทดสอบอื่นๆ)</span></label>
+                <div class="signature-line"></div>
+                <div class="signature-name">(Name / <span class="thai">ชื่อ</span>)</div>
+            </div>
+             <div class="signature-block">
+                <label>Reviewed By <span class="thai">ตรวจสอบ</span></label>
+                <div class="signature-line"></div>
+                <div class="signature-name">(Manager / <span class="thai">ผู้จัดการ</span>)</div>
+            </div>
+        </div>
+        <p style="text-align: center; font-size: 0.8em; color: #6c757d; margin-top: 30px;">Date of Report: <input type="date" value="2025-05-12" style="width: 150px; font-size: 0.9em;"> <span class="thai">วันที่รายงาน:</span></p>
+
+    </div>
+</body>
+</html>
